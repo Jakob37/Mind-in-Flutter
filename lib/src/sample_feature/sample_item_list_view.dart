@@ -81,24 +81,60 @@ class SampleItemListView extends StatelessWidget {
           child: const Icon(Icons.add, size: 30)),
     );
   }
+
+  void _showModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => _InputModal(
+        onSubmitted: (value) {
+          print("Received input: $value");
+        },
+      ),
+    );
+  }
 }
 
-void _showModal(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Add New Item"),
-        content: const Text("Here you can add new items to your list"),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
+class _InputModal extends StatefulWidget {
+  final Function(String) onSubmitted;
+
+  const _InputModal({Key? key, required this.onSubmitted}) : super(key: key);
+
+  @override
+  _InputModalState createState() => _InputModalState();
+}
+
+class _InputModalState extends State<_InputModal> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Enter your input"),
+      content: TextField(
+        controller: _controller,
+        decoration: const InputDecoration(hintText: "Text .."),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            widget.onSubmitted(_controller.text);
+            Navigator.of(context).pop();
+          },
+          child: const Text('Submit'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }
