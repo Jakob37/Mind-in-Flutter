@@ -4,6 +4,9 @@ import '../settings/settings_view.dart';
 import 'sample_item.dart';
 import 'sample_item_details_view.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatefulWidget {
   const SampleItemListView({Key? key}) : super(key: key);
@@ -25,6 +28,12 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   ];
 
   // final List<SampleItem> items;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItems();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +88,31 @@ class _SampleItemListViewState extends State<SampleItemListView> {
       builder: (BuildContext context) => _InputModal(
         onSubmitted: (value) {
           setState(() {
-            int nextId = items.fold(
-                    0,
-                    (int currentMax, SampleItem item) =>
-                        item.id > currentMax ? item.id : currentMax) +
-                1;
-            items.add(SampleItem(nextId, value));
+            _addNewItem(value);
           });
-          // Navigator.of(context).pop();
         },
       ),
     );
+  }
+
+  void _loadItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? itemsJson = prefs.getString('items');
+    if (itemsJson != null) {
+      setState(() {
+        items = List<SampleItem>.from(
+            json.decode(itemsJson).map((x) => SampleItem.fromJson(x)));
+      });
+    }
+  }
+
+  void _addNewItem(String content) async {
+    final prefs = await SharedPreferences.getInstance();
+    final int nextId = items.isEmpty ? 1 : items.last.id + 1;
+    final newItem = SampleItem(nextId, content);
+    items.add(newItem);
+    await prefs.setString('items', json.encode(items.map((x) => x.toJson())));
+    setState(() {});
   }
 }
 
