@@ -26,7 +26,7 @@ class SampleItemListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample Items'),
+        title: const Text('Mind'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -72,6 +72,33 @@ class SampleItemListView extends StatelessWidget {
               });
         },
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => _showModal(context),
+          backgroundColor: Colors.deepPurple,
+          elevation: 10,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: const Icon(Icons.add, size: 30)),
     );
   }
+}
+
+void _showModal(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Add New Item"),
+        content: const Text("Here you can add new items to your list"),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
