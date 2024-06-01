@@ -18,14 +18,7 @@ class SampleItemListView extends StatefulWidget {
 }
 
 class _SampleItemListViewState extends State<SampleItemListView> {
-  List<SampleItem> items = [
-    SampleItem(1, "I want to capture learning"),
-    SampleItem(2, "I want to capture idea building"),
-    SampleItem(3, "I want to iterate organically on this app"),
-    SampleItem(4, "Learning is also a priority"),
-    SampleItem(5,
-        "Looks like next target is to get user editing and data persistance"),
-  ];
+  List<SampleItem> items = [];
 
   // final List<SampleItem> items;
 
@@ -56,10 +49,10 @@ class _SampleItemListViewState extends State<SampleItemListView> {
           final item = items[index];
 
           return ListTile(
-              title: Text('Thought: ${item.content}'),
-              leading: const CircleAvatar(
-                // Display the Flutter Logo image asset.
-                foregroundImage: AssetImage('assets/images/flutter_logo.png'),
+              title: Text(item.content),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _removeItem(index),
               ),
               onTap: () {
                 // Navigate to the details page. If the user leaves and returns to
@@ -98,6 +91,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   void _loadItems() async {
     final prefs = await SharedPreferences.getInstance();
     final String? itemsJson = prefs.getString('items');
+    print("Obtaining itemsJson $itemsJson");
     if (itemsJson != null) {
       setState(() {
         items = List<SampleItem>.from(
@@ -111,8 +105,19 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     final int nextId = items.isEmpty ? 1 : items.last.id + 1;
     final newItem = SampleItem(nextId, content);
     items.add(newItem);
-    await prefs.setString('items', json.encode(items.map((x) => x.toJson())));
+    final prefsString = json.encode(items.map((x) => x.toJson()).toList());
+    await prefs.setString('items', prefsString);
     setState(() {});
+  }
+
+  void _removeItem(int index) async {
+    setState(() {
+      items.removeAt(index);
+    });
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'items', json.encode(items.map((x) => x.toJson()).toList()));
   }
 }
 
