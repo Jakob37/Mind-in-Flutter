@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
 import '../settings/settings_view.dart';
-import 'sample_item.dart';
+import '../sample_item.dart';
+import '../ui/input_modal.dart';
 import 'sample_item_details_view.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,7 +89,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   void _showModal(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => _InputModal(
+      builder: (BuildContext context) => InputModal(
         onSubmitted: (value) {
           setState(() {
             _addNewItem(value);
@@ -132,54 +133,5 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
         'items', json.encode(items.map((x) => x.toJson()).toList()));
-  }
-}
-
-class _InputModal extends StatefulWidget {
-  final Function(String) onSubmitted;
-
-  const _InputModal({Key? key, required this.onSubmitted}) : super(key: key);
-
-  @override
-  _InputModalState createState() => _InputModalState();
-}
-
-class _InputModalState extends State<_InputModal> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Enter your thoughts"),
-      content: TextField(
-        controller: _controller,
-        decoration: const InputDecoration(hintText: "..."),
-        autofocus: true,
-        focusNode: _focusNode,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            widget.onSubmitted(_controller.text);
-            Navigator.of(context).pop();
-          },
-          child: const Text('Submit'),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
   }
 }
