@@ -43,25 +43,26 @@ class _SampleItemListViewState extends State<SampleItemListView> {
           ),
         ],
       ),
-      body: ListView.builder(
-        restorationId: 'sampleItemListView',
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          final item = items[index];
-
-          return ListTile(
-              title: Text(item.content),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () => _removeItem(index),
-              ),
-              onTap: () {
-                Navigator.restorablePushNamed(
-                  context,
-                  SampleItemDetailsView.routeName,
-                );
-              });
-        },
+      body: ReorderableListView(
+        // restorationId: 'sampleItemListView',
+        // itemCount: items.length,
+        onReorder: _onReorder,
+        children: [
+          for (int index = 0; index < items.length; index++)
+            ListTile(
+                key: ValueKey(items[index]),
+                title: Text(items[index].content),
+                onTap: () {
+                  Navigator.restorablePushNamed(
+                    context,
+                    SampleItemDetailsView.routeName,
+                  );
+                },
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _removeItem(index),
+                ))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () => _showModal(context),
@@ -71,6 +72,17 @@ class _SampleItemListViewState extends State<SampleItemListView> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: const Icon(Icons.add, size: 30)),
     );
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final SampleItem item = items.removeAt(oldIndex);
+      items.insert(newIndex, item);
+      _storeItems();
+    });
   }
 
   void _showModal(BuildContext context) {
@@ -103,10 +115,13 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     final int nextId = items.isEmpty ? 1 : items.last.id + 1;
     final newItem = SampleItem(nextId, content);
     items.add(newItem);
+    _storeItems();
+    setState(() {});
+  }
+
+  void _storeItems() async {
     final prefsString = json.encode(items.map((x) => x.toJson()).toList());
     await StorageHelper.writeData(prefsString);
-    // await prefs.setString('items', prefsString);
-    setState(() {});
   }
 
   void _removeItem(int index) async {
@@ -131,28 +146,31 @@ class _InputModal extends StatefulWidget {
 
 class _InputModalState extends State<_InputModal> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Enter your input"),
+      title: const Text("Enter your thoughts"),
       content: TextField(
         controller: _controller,
-        decoration: const InputDecoration(hintText: "Text .."),
+        decoration: const InputDecoration(hintText: "..."),
+        autofocus: true,
+        focusNode: _focusNode,
       ),
       actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
         TextButton(
           onPressed: () {
             widget.onSubmitted(_controller.text);
             Navigator.of(context).pop();
           },
           child: const Text('Submit'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
         ),
       ],
     );
@@ -161,6 +179,7 @@ class _InputModalState extends State<_InputModal> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }
