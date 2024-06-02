@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_flutter/src/storage_helper.dart';
 
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
@@ -55,9 +56,6 @@ class _SampleItemListViewState extends State<SampleItemListView> {
                 onPressed: () => _removeItem(index),
               ),
               onTap: () {
-                // Navigate to the details page. If the user leaves and returns to
-                // the app after it has been killed while running in the
-                // background, the navigation stack is restored.
                 Navigator.restorablePushNamed(
                   context,
                   SampleItemDetailsView.routeName,
@@ -89,9 +87,9 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   }
 
   void _loadItems() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? itemsJson = prefs.getString('items');
-    print("Obtaining itemsJson $itemsJson");
+    // final prefs = await SharedPreferences.getInstance();
+    // final String? itemsJson = prefs.getString('items');
+    final String? itemsJson = await StorageHelper.readData();
     if (itemsJson != null) {
       setState(() {
         items = List<SampleItem>.from(
@@ -101,12 +99,13 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   }
 
   void _addNewItem(String content) async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
     final int nextId = items.isEmpty ? 1 : items.last.id + 1;
     final newItem = SampleItem(nextId, content);
     items.add(newItem);
     final prefsString = json.encode(items.map((x) => x.toJson()).toList());
-    await prefs.setString('items', prefsString);
+    await StorageHelper.writeData(prefsString);
+    // await prefs.setString('items', prefsString);
     setState(() {});
   }
 
