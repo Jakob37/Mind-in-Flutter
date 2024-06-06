@@ -33,17 +33,17 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mind'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.restorablePushNamed(context, SettingsView.routeName);
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Mind'),
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.settings),
+      //       onPressed: () {
+      //         Navigator.restorablePushNamed(context, SettingsView.routeName);
+      //       },
+      //     ),
+      //   ],
+      // ),
       body: ReorderableListView(
         // restorationId: 'sampleItemListView',
         // itemCount: items.length,
