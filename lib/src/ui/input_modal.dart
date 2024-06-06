@@ -22,6 +22,7 @@ class InputModalState extends State<InputModal> {
         decoration: const InputDecoration(hintText: "..."),
         autofocus: true,
         focusNode: _focusNode,
+        maxLines: null,
       ),
       actions: [
         TextButton(

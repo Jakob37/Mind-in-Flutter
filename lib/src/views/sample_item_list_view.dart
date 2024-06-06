@@ -34,7 +34,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   title: const Text('Mind'),
+      //   // title: const Text('Mind'),
       //   actions: [
       //     IconButton(
       //       icon: const Icon(Icons.settings),
@@ -44,27 +44,11 @@ class _SampleItemListViewState extends State<SampleItemListView> {
       //     ),
       //   ],
       // ),
-      body: ReorderableListView(
-        // restorationId: 'sampleItemListView',
-        // itemCount: items.length,
+      body: SafeArea(
+          child: ReorderableListView(
         onReorder: _onReorder,
-        children: [
-          for (int index = 0; index < items.length; index++)
-            ListTile(
-                key: ValueKey(items[index]),
-                title: Text(items[index].content),
-                onTap: () {
-                  Navigator.restorablePushNamed(
-                    context,
-                    SampleItemDetailsView.routeName,
-                  );
-                },
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _removeItem(index),
-                ))
-        ],
-      ),
+        children: items.map((item) => _buildItem(context, item)).toList(),
+      )),
       floatingActionButton: FloatingActionButton(
           onPressed: () => _showModal(context),
           backgroundColor: Colors.deepPurple,
@@ -72,6 +56,27 @@ class _SampleItemListViewState extends State<SampleItemListView> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: const Icon(Icons.add, size: 30)),
+    );
+  }
+
+  Widget _buildItem(BuildContext context, SampleItem item) {
+    return Dismissible(
+      key: ValueKey(item),
+      background: Container(
+          color: Colors.red,
+          alignment: Alignment.centerLeft,
+          child: const Icon(Icons.delete, color: Colors.white)),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (direction) {
+        _removeItem(items.indexOf(item));
+      },
+      child: ListTile(
+        title: Text(item.content),
+        onTap: () {
+          Navigator.restorablePushNamed(
+              context, SampleItemDetailsView.routeName);
+        },
+      ),
     );
   }
 
@@ -126,12 +131,14 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   }
 
   void _removeItem(int index) async {
-    setState(() {
-      items.removeAt(index);
-    });
+    items.removeAt(index);
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'items', json.encode(items.map((x) => x.toJson()).toList()));
+    setState(() {});
+
+    _storeItems();
+
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.setString(
+    //     'items', json.encode(items.map((x) => x.toJson()).toList()));
   }
 }
