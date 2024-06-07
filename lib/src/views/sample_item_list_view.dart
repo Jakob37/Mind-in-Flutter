@@ -32,18 +32,28 @@ class _SampleItemListViewState extends State<SampleItemListView> {
 
   @override
   Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: const PreferredSize(
+              // title: Text('Tab Example'),
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: SafeArea(
+                  child: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.edit)),
+                  Tab(icon: Icon(Icons.folder)),
+                ],
+              )),
+            ),
+            body: TabBarView(children: [
+              _listView(),
+              const Icon(Icons.folder),
+            ])));
+  }
+
+  Widget _listView() {
     return Scaffold(
-      // appBar: AppBar(
-      //   // title: const Text('Mind'),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.settings),
-      //       onPressed: () {
-      //         Navigator.restorablePushNamed(context, SettingsView.routeName);
-      //       },
-      //     ),
-      //   ],
-      // ),
       body: SafeArea(
           child: ReorderableListView(
         onReorder: _onReorder,
