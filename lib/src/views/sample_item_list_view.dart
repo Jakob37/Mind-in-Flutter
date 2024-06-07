@@ -1,18 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
-import '../settings/settings_view.dart';
 import '../sample_item.dart';
 import '../ui/input_modal.dart';
 import 'sample_item_details_view.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+Widget appTabsView() {
+  return const DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: SafeArea(
+                child: TabBar(tabs: [
+              Tab(icon: Icon(Icons.edit)),
+              Tab(icon: Icon(Icons.folder)),
+            ]))),
+        body: TabBarView(children: [
+          // Icon(Icons.edit),
+          SampleItemListView(fileName: "data.txt"),
+          SampleItemListView(fileName: "store.txt"),
+          // Icon(Icons.folder),
+          // const Icon(Icons.folder),
+        ]),
+      ));
+}
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatefulWidget {
-  const SampleItemListView({Key? key}) : super(key: key);
+  final String fileName;
+  const SampleItemListView({Key? key, required this.fileName})
+      : super(key: key);
 
   static const routeName = '/';
 
@@ -31,30 +51,34 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     _loadItems();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: const PreferredSize(
-            // title: Text('Tab Example'),
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: SafeArea(
-                child: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.edit)),
-                Tab(icon: Icon(Icons.folder)),
-              ],
-            )),
-          ),
-          body: TabBarView(children: [
-            _listView(),
-            const Icon(Icons.folder),
-          ]),
-        ));
-  }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return _listView();
+  //   Scaffold(
+  //       // DefaultTabController(
+  //       // length: 2,
+  //       // child: Scaffold(
+  //       appBar: const PreferredSize(
+  //         // title: Text('Tab Example'),
+  //         preferredSize: Size.fromHeight(kToolbarHeight),
+  //         child: SafeArea(
+  //             child: TabBar(
+  //           tabs: [
+  //             Tab(icon: Icon(Icons.edit)),
+  //             Tab(icon: Icon(Icons.folder)),
+  //           ],
+  //         )),
+  //       ),
+  //       body: TabBarView(children: [
+  //         _listView(),
+  //         _listView(),
+  //         // const Icon(Icons.folder),
+  //       ]));
+  //   // ));
+  // }
 
-  Widget _listView() {
+  // @override
+  Widget build(BuildContext context) {
     Widget getList() {
       return ReorderableListView(
         onReorder: _onReorder,
@@ -128,7 +152,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   void _loadItems() async {
     // final prefs = await SharedPreferences.getInstance();
     // final String? itemsJson = prefs.getString('items');
-    final String? itemsJson = await StorageHelper.readData();
+    final String? itemsJson = await StorageHelper.readData(widget.fileName);
     if (itemsJson != null) {
       setState(() {
         items = List<SampleItem>.from(
@@ -148,18 +172,12 @@ class _SampleItemListViewState extends State<SampleItemListView> {
 
   void _storeItems() async {
     final prefsString = json.encode(items.map((x) => x.toJson()).toList());
-    await StorageHelper.writeData(prefsString);
+    await StorageHelper.writeData(prefsString, widget.fileName);
   }
 
   void _removeItem(int index) async {
     items.removeAt(index);
-
     setState(() {});
-
     _storeItems();
-
-    // final prefs = await SharedPreferences.getInstance();
-    // await prefs.setString(
-    //     'items', json.encode(items.map((x) => x.toJson()).toList()));
   }
 }

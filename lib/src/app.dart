@@ -32,18 +32,8 @@ class MyApp extends StatelessWidget {
           supportedLocales: const [
             Locale('en', ''),
           ],
-
-          // Use AppLocalizations to configure the correct application title
-          // depending on the user's locale.
-          //
-          // The appTitle is defined in .arb files found in the localization
-          // directory.
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-
-          // Define a light and dark color theme. Then, read the user's
-          // preferred ThemeMode (light, dark, or system default) from the
-          // SettingsController to display the correct theme.
           theme: ThemeData(
               scaffoldBackgroundColor: const Color(0xFF003366),
               appBarTheme: const AppBarTheme(color: Color(0xFF003366))),
@@ -51,9 +41,6 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: const Color(0xFF003366),
               appBarTheme: const AppBarTheme(color: Color(0xFF003366))),
           themeMode: settingsController.themeMode,
-
-          // Define a function to handle named routes in order to support
-          // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -65,7 +52,8 @@ class MyApp extends StatelessWidget {
                     return const SampleItemDetailsView();
                   case SampleItemListView.routeName:
                   default:
-                    return const SampleItemListView();
+                    return appTabsView();
+                  // return const SampleItemListView();
                 }
               },
             );
