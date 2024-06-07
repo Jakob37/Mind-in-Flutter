@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
 import '../settings/settings_view.dart';
@@ -35,38 +36,48 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-            appBar: const PreferredSize(
-              // title: Text('Tab Example'),
-              preferredSize: Size.fromHeight(kToolbarHeight),
-              child: SafeArea(
-                  child: TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.edit)),
-                  Tab(icon: Icon(Icons.folder)),
-                ],
-              )),
-            ),
-            body: TabBarView(children: [
-              _listView(),
-              const Icon(Icons.folder),
-            ])));
+          appBar: const PreferredSize(
+            // title: Text('Tab Example'),
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: SafeArea(
+                child: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.edit)),
+                Tab(icon: Icon(Icons.folder)),
+              ],
+            )),
+          ),
+          body: TabBarView(children: [
+            _listView(),
+            const Icon(Icons.folder),
+          ]),
+        ));
   }
 
   Widget _listView() {
-    return Scaffold(
-      body: SafeArea(
-          child: ReorderableListView(
+    Widget getList() {
+      return ReorderableListView(
         onReorder: _onReorder,
-        children: items.map((item) => _buildItem(context, item)).toList(),
-      )),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () => _showModal(context),
-          backgroundColor: Colors.deepPurple,
-          elevation: 10,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: const Icon(Icons.add, size: 30)),
-    );
+        children: [
+          ...items.map((item) => _buildItem(context, item)),
+        ],
+      );
+    }
+
+    return Scaffold(
+        body: SafeArea(child: Column(children: [Expanded(child: getList())])),
+        bottomNavigationBar: ElevatedButton(
+            onPressed: () => _showModal(context),
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(Colors.transparent),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
+              elevation: WidgetStateProperty.all(0),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              )),
+            ),
+            child: const Text('Add item', style: TextStyle(fontSize: 18))));
   }
 
   Widget _buildItem(BuildContext context, SampleItem item) {
