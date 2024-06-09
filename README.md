@@ -1,30 +1,12 @@
-# mind_flutter
+# Mind in Flutter
 
-A new Flutter project.
+There are two aims with this project:
 
-## Getting Started
+1. I want to learn Flutter
+2. I want to build a knowledge management app which meets my very picky requirements
 
-This project is a starting point for a Flutter application that follows the
-[simple app state management
-tutorial](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple).
+I hope to be able to use it to gather ideas on different topics and build them over time.
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Ideally, it should also be easy to mark entries for flash cards, for spaced repetition learning.
 
-## Assets
-
-The `assets` directory houses images, fonts, and any other files you want to
-include with your application.
-
-The `assets/images` directory contains [resolution-aware
-images](https://flutter.dev/docs/development/ui/assets-and-images#resolution-aware).
-
-## Localization
-
-This project generates localized messages based on arb files found in
-the `lib/src/localization` directory.
-
-To support additional languages, please visit the tutorial on
-[Internationalizing Flutter
-apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+I am developing it "organically", using the embryonic state of the app to organize ideas on how to build it. (Also known as "dog fooding" your app ..)
