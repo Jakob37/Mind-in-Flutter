@@ -9,6 +9,12 @@ class Database {
 
   Database(this.filepath, this.scratch, this.stores);
 
+  Future<void> write() async {
+    var dbJson = toJson();
+    var jsonString = jsonEncode(dbJson);
+    await StorageHelper.writeData(jsonString, filepath);
+  }
+
   static Future<Database> init(String filepath) async {
     final String? jsonString = await StorageHelper.readData(filepath);
     if (jsonString == null) {
