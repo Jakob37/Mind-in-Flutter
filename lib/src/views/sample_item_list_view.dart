@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
-import '../sample_item.dart';
+import '../data_objects.dart';
 import '../ui/input_modal.dart';
 import 'sample_item_details_view.dart';
 
 import 'dart:convert';
+
+const String SCRATCH_FILENAME = "data.txt";
+const String STORE_FILENAME = "store.txt";
 
 Widget appTabsView() {
   return const DefaultTabController(
@@ -14,15 +17,18 @@ Widget appTabsView() {
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: SafeArea(
-                child: TabBar(tabs: [
-              Tab(icon: Icon(Icons.edit)),
-              Tab(icon: Icon(Icons.folder)),
-            ]))),
+              child: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.edit)),
+                  Tab(icon: Icon(Icons.folder)),
+                ],
+                labelColor: Colors.white,
+              ),
+            )),
         body: TabBarView(children: [
           // Icon(Icons.edit),
-          SampleItemListView(fileName: "data.txt"),
-          SampleItemListView(fileName: "store.txt"),
-          // Icon(Icons.folder),
+          SampleItemListView(fileName: SCRATCH_FILENAME),
+          SampleItemListView(fileName: STORE_FILENAME)
           // const Icon(Icons.folder),
         ]),
       ));
@@ -41,41 +47,13 @@ class SampleItemListView extends StatefulWidget {
 }
 
 class _SampleItemListViewState extends State<SampleItemListView> {
-  List<SampleItem> items = [];
-
-  // final List<SampleItem> items;
+  List<Entry> items = [];
 
   @override
   void initState() {
     super.initState();
     _loadItems();
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return _listView();
-  //   Scaffold(
-  //       // DefaultTabController(
-  //       // length: 2,
-  //       // child: Scaffold(
-  //       appBar: const PreferredSize(
-  //         // title: Text('Tab Example'),
-  //         preferredSize: Size.fromHeight(kToolbarHeight),
-  //         child: SafeArea(
-  //             child: TabBar(
-  //           tabs: [
-  //             Tab(icon: Icon(Icons.edit)),
-  //             Tab(icon: Icon(Icons.folder)),
-  //           ],
-  //         )),
-  //       ),
-  //       body: TabBarView(children: [
-  //         _listView(),
-  //         _listView(),
-  //         // const Icon(Icons.folder),
-  //       ]));
-  //   // ));
-  // }
 
   // @override
   Widget build(BuildContext context) {
@@ -104,16 +82,27 @@ class _SampleItemListViewState extends State<SampleItemListView> {
             child: const Text('Add item', style: TextStyle(fontSize: 18))));
   }
 
-  Widget _buildItem(BuildContext context, SampleItem item) {
+  Widget _buildItem(BuildContext context, Entry item) {
     return Dismissible(
       key: ValueKey(item),
-      background: Container(
+      secondaryBackground: Container(
           color: Colors.red,
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.centerRight,
           child: const Icon(Icons.delete, color: Colors.white)),
-      direction: DismissDirection.startToEnd,
+      background: Container(
+        color: Colors.blue,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(Icons.arrow_right, color: Colors.white),
+      ),
+      // direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        _removeItem(items.indexOf(item));
+        if (direction == DismissDirection.endToStart) {
+          _removeItem(items.indexOf(item));
+        } else if (direction == DismissDirection.startToEnd) {
+          _removeItem(items.indexOf(item));
+          // _moveItem(items.indexOf(item));
+        }
       },
       child: ListTile(
         title: Text(item.content),
@@ -130,7 +119,7 @@ class _SampleItemListViewState extends State<SampleItemListView> {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final SampleItem item = items.removeAt(oldIndex);
+      final Entry item = items.removeAt(oldIndex);
       items.insert(newIndex, item);
       _storeItems();
     });
@@ -155,20 +144,21 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     final String? itemsJson = await StorageHelper.readData(widget.fileName);
     if (itemsJson != null) {
       setState(() {
-        items = List<SampleItem>.from(
-            json.decode(itemsJson).map((x) => SampleItem.fromJson(x)));
+        items = List<Entry>.from(
+            json.decode(itemsJson).map((x) => Entry.fromJson(x)));
       });
     }
   }
 
   void _addNewItem(String content) async {
-    // final prefs = await SharedPreferences.getInstance();
     final int nextId = items.isEmpty ? 1 : items.last.id + 1;
-    final newItem = SampleItem(nextId, content);
+    final newItem = Entry(nextId, content);
     items.add(newItem);
     _storeItems();
     setState(() {});
   }
+
+  void _addToStore(String content) async {}
 
   void _storeItems() async {
     final prefsString = json.encode(items.map((x) => x.toJson()).toList());
@@ -180,4 +170,13 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     setState(() {});
     _storeItems();
   }
+
+  // void _moveItem(int index) async {
+  //   var item = items[index];
+  //   items.removeAt(index);
+  //   setState(() {});
+  //   _storeItems();
+
+  //   _addToStore(item.content);
+  // }
 }
