@@ -29,36 +29,51 @@ Widget appTabsView(Database db) {
                 labelColor: Colors.white,
               ),
             )),
-        body:
-            TabBarView(children: [ItemListView(db: db), ItemListView(db: db)]),
+        body: TabBarView(children: [
+          ItemListView(
+              loadEntries: () => db.scratch.entries,
+              assignEntries: (List<Entry> entries) =>
+                  db.scratch.entries = entries),
+          ItemListView(
+              loadEntries: () => db.scratch.entries,
+              assignEntries: (List<Entry> entries) =>
+                  db.scratch.entries = entries),
+        ]),
       ));
 }
 
 class ItemListView extends StatefulWidget {
-  const ItemListView({super.key, required Database db});
+  final List<Entry> Function() loadEntries;
+  final void Function(List<Entry>) assignEntries;
 
-  static const routeName = '/';
+  const ItemListView(
+      {super.key, required this.loadEntries, required this.assignEntries});
+
+  // static const routeName = '/';
 
   @override
   ItemListViewState createState() => ItemListViewState();
 }
 
 class ItemListViewState extends State<ItemListView> {
-  List<Entry> items = [];
+  List<Entry> entries = [];
 
   @override
   void initState() {
     super.initState();
-    _loadItems();
+    var loadEntries = widget.loadEntries();
+    setState(() {
+      entries = loadEntries;
+    });
   }
 
-  // @override
+  @override
   Widget build(BuildContext context) {
     Widget getList() {
       return ReorderableListView(
         onReorder: _onReorder,
         children: [
-          ...items.map((item) => _buildItem(context, item)),
+          ...entries.map((item) => _buildItem(context, item)),
         ],
       );
     }
@@ -95,9 +110,9 @@ class ItemListViewState extends State<ItemListView> {
       // direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         if (direction == DismissDirection.endToStart) {
-          _removeItem(items.indexOf(item));
+          _removeItem(entries.indexOf(item));
         } else if (direction == DismissDirection.startToEnd) {
-          _removeItem(items.indexOf(item));
+          _removeItem(entries.indexOf(item));
           // _moveItem(items.indexOf(item));
         }
       },
@@ -116,9 +131,9 @@ class ItemListViewState extends State<ItemListView> {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final Entry item = items.removeAt(oldIndex);
-      items.insert(newIndex, item);
-      _storeItems();
+      final Entry item = entries.removeAt(oldIndex);
+      entries.insert(newIndex, item);
+      widget.assignEntries(entries);
     });
   }
 
@@ -135,47 +150,16 @@ class ItemListViewState extends State<ItemListView> {
     );
   }
 
-  void _loadItems() async {
-    print("FIXME: loadItems");
-    // final String? itemsJson = await StorageHelper.readData(widget.fileName);
-    // if (itemsJson != null) {
-    //   setState(() {
-    //     items = List<Entry>.from(
-    //         json.decode(itemsJson).map((x) => Entry.fromJson(x)));
-    //   });
-    // }
-  }
-
   void _addNewItem(String content) async {
-    print("FIXME: addNewItem");
-    // final int nextId = items.isEmpty ? 1 : items.last.id + 1;
-    // final newItem = Entry(nextId, content);
-    // items.add(newItem);
-    // _storeItems();
-    // setState(() {});
-  }
-
-  void _addToStore(String content) async {}
-
-  void _storeItems() async {
-    print("FIXME: storeItems");
-    // final prefsString = json.encode(items.map((x) => x.toJson()).toList());
-    // await StorageHelper.writeData(prefsString, widget.fileName);
+    Entry entry = Entry(-1, DateTime.now(), DateTime.now(), "title", content);
+    entries.add(entry);
+    widget.assignEntries(entries);
+    setState(() {});
   }
 
   void _removeItem(int index) async {
-    print("FIXME: removeItem");
-    // items.removeAt(index);
-    // setState(() {});
-    // _storeItems();
+    entries.removeAt(index);
+    setState(() {});
+    widget.assignEntries(entries);
   }
-
-  // void _moveItem(int index) async {
-  //   var item = items[index];
-  //   items.removeAt(index);
-  //   setState(() {});
-  //   _storeItems();
-
-  //   _addToStore(item.content);
-  // }
 }
