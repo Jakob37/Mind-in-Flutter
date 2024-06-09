@@ -45,16 +45,18 @@ class Store {
       "id": id.toString(),
       "created": created.toIso8601String(),
       "lastChanged": lastChanged.toIso8601String(),
-      "entries": entries.map((entry) => jsonEncode(entry))
+      "entries": entries.map((entry) => entry.toJson())
     };
   }
 
   factory Store.fromJson(Map<String, dynamic> json) {
-    var id = int.parse(json['id']);
-    var created = DateTime.parse(json['created']);
-    var lastChanged = DateTime.parse(json['lastChanged']);
-    var title = json['title'] as String;
-    var entries = json['entries'] as List<Entry>;
+    int id = int.parse(json['id']);
+    DateTime created = DateTime.parse(json['created']);
+    DateTime lastChanged = DateTime.parse(json['lastChanged']);
+    String title = json['title'] as String;
+    List<Entry> entries = (json['entries'] as List<dynamic>)
+        .map((entryJson) => Entry.fromJson(entryJson as Map<String, dynamic>))
+        .toList();
     return Store(id, created, lastChanged, title, entries);
   }
 }
@@ -72,8 +74,8 @@ class Entry {
         'id': id.toString(),
         'created': created.toIso8601String(),
         'lastChanged': lastChanged.toIso8601String(),
-        'title': title.toString(),
-        'content': content.toString(),
+        'title': title,
+        'content': content,
       };
 
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
