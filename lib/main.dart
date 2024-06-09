@@ -10,7 +10,14 @@ void main() async {
 
   await settingsController.loadSettings();
 
-  Database db = await Database.init("db_test.txt");
+  Database db;
+  try {
+    db = await Database.init("db_test.txt");
+  } catch (e) {
+    print(e.toString());
+    Store scratch = Store(-1, DateTime.now(), DateTime.now(), "scratch", []);
+    db = Database("db_test.txt", scratch, []);
+  }
 
   runApp(MindApp(db: db, settingsController: settingsController));
 }

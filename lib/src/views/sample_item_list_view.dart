@@ -49,7 +49,8 @@ class ItemListView extends StatefulWidget {
   const ItemListView(
       {super.key, required this.loadEntries, required this.assignEntries});
 
-  // static const routeName = '/';
+  // Used in app.dart
+  static const routeName = '/';
 
   @override
   ItemListViewState createState() => ItemListViewState();

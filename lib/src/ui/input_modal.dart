@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InputModal extends StatefulWidget {
   final Function(String) onSubmitted;
 
-  const InputModal({Key? key, required this.onSubmitted}) : super(key: key);
+  const InputModal({super.key, required this.onSubmitted});
 
   @override
   InputModalState createState() => InputModalState();
