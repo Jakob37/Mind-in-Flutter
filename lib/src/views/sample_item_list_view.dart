@@ -7,10 +7,15 @@ import 'sample_item_details_view.dart';
 
 import 'dart:convert';
 
-const String SCRATCH_FILENAME = "data.txt";
-const String STORE_FILENAME = "store.txt";
+// const String SCRATCH_FILENAME = "data.txt";
+// const String STORE_FILENAME = "store.txt";
+const String DB_FILENAME = "db.txt";
 
 Widget appTabsView() {
+
+  // final String? itemsJson = await StorageHelper.readData(widget.fileName);
+  // var db = Database.fromJson(json)
+
   return const DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -36,8 +41,10 @@ Widget appTabsView() {
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatefulWidget {
-  final String fileName;
-  const SampleItemListView({Key? key, required this.fileName})
+  // final String fileName;
+  Database db;
+  const SampleItemListView({Key? key, required this.db})
+  // const SampleItemListView({Key? key, required this.fileName})
       : super(key: key);
 
   static const routeName = '/';

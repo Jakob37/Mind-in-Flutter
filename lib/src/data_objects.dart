@@ -13,6 +13,14 @@ class Database {
     return jsonEncode(
         {"scrach": scratchJson, "stores": jsonEncode(storeJsons)});
   }
+
+  factory Database.fromJson(Map<String, dynamic> json) {
+    var scratch = Store.fromJson(json['scratch']);
+    // FIXME: How to handle the decode of the array?
+    var stores = jsonDecode(json['stores']);
+
+    return Database(scratch, stores);
+  }
 }
 
 class Store {
