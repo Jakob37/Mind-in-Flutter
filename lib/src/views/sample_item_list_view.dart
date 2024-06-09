@@ -29,22 +29,21 @@ Widget appTabsView(Database db) {
                 labelColor: Colors.white,
               ),
             )),
-        body: TabBarView(
-            children: [SampleItemListView(db: db), SampleItemListView(db: db)]),
+        body:
+            TabBarView(children: [ItemListView(db: db), ItemListView(db: db)]),
       ));
 }
 
-class SampleItemListView extends StatefulWidget {
-  Database db;
-  SampleItemListView({Key? key, required this.db}) : super(key: key);
+class ItemListView extends StatefulWidget {
+  const ItemListView({super.key, required Database db});
 
   static const routeName = '/';
 
   @override
-  SampleItemListViewState createState() => SampleItemListViewState();
+  ItemListViewState createState() => ItemListViewState();
 }
 
-class SampleItemListViewState extends State<SampleItemListView> {
+class ItemListViewState extends State<ItemListView> {
   List<Entry> items = [];
 
   @override

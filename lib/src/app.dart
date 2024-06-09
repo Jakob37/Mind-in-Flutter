@@ -53,7 +53,7 @@ class MindApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case SampleItemDetailsView.routeName:
                     return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
+                  case ItemListView.routeName:
                   default:
                     return appTabsView(db);
                   // return const SampleItemListView();
