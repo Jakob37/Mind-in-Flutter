@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
-import '../data_objects.dart';
+import '../database.dart';
 import '../ui/input_modal.dart';
 import 'sample_item_details_view.dart';
 
