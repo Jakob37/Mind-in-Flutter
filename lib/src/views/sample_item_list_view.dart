@@ -11,15 +11,14 @@ import 'dart:convert';
 // const String STORE_FILENAME = "store.txt";
 const String DB_FILENAME = "db.txt";
 
-Widget appTabsView() {
-
+Widget appTabsView(Database db) {
   // final String? itemsJson = await StorageHelper.readData(widget.fileName);
   // var db = Database.fromJson(json)
 
-  return const DefaultTabController(
+  return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: PreferredSize(
+        appBar: const PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: SafeArea(
               child: TabBar(
@@ -30,30 +29,22 @@ Widget appTabsView() {
                 labelColor: Colors.white,
               ),
             )),
-        body: TabBarView(children: [
-          // Icon(Icons.edit),
-          SampleItemListView(fileName: SCRATCH_FILENAME),
-          SampleItemListView(fileName: STORE_FILENAME)
-          // const Icon(Icons.folder),
-        ]),
+        body: TabBarView(
+            children: [SampleItemListView(db: db), SampleItemListView(db: db)]),
       ));
 }
 
-/// Displays a list of SampleItems.
 class SampleItemListView extends StatefulWidget {
-  // final String fileName;
   Database db;
-  const SampleItemListView({Key? key, required this.db})
-  // const SampleItemListView({Key? key, required this.fileName})
-      : super(key: key);
+  SampleItemListView({Key? key, required this.db}) : super(key: key);
 
   static const routeName = '/';
 
   @override
-  _SampleItemListViewState createState() => _SampleItemListViewState();
+  SampleItemListViewState createState() => SampleItemListViewState();
 }
 
-class _SampleItemListViewState extends State<SampleItemListView> {
+class SampleItemListViewState extends State<SampleItemListView> {
   List<Entry> items = [];
 
   @override
@@ -146,36 +137,38 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   }
 
   void _loadItems() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final String? itemsJson = prefs.getString('items');
-    final String? itemsJson = await StorageHelper.readData(widget.fileName);
-    if (itemsJson != null) {
-      setState(() {
-        items = List<Entry>.from(
-            json.decode(itemsJson).map((x) => Entry.fromJson(x)));
-      });
-    }
+    print("FIXME: loadItems");
+    // final String? itemsJson = await StorageHelper.readData(widget.fileName);
+    // if (itemsJson != null) {
+    //   setState(() {
+    //     items = List<Entry>.from(
+    //         json.decode(itemsJson).map((x) => Entry.fromJson(x)));
+    //   });
+    // }
   }
 
   void _addNewItem(String content) async {
-    final int nextId = items.isEmpty ? 1 : items.last.id + 1;
-    final newItem = Entry(nextId, content);
-    items.add(newItem);
-    _storeItems();
-    setState(() {});
+    print("FIXME: addNewItem");
+    // final int nextId = items.isEmpty ? 1 : items.last.id + 1;
+    // final newItem = Entry(nextId, content);
+    // items.add(newItem);
+    // _storeItems();
+    // setState(() {});
   }
 
   void _addToStore(String content) async {}
 
   void _storeItems() async {
-    final prefsString = json.encode(items.map((x) => x.toJson()).toList());
-    await StorageHelper.writeData(prefsString, widget.fileName);
+    print("FIXME: storeItems");
+    // final prefsString = json.encode(items.map((x) => x.toJson()).toList());
+    // await StorageHelper.writeData(prefsString, widget.fileName);
   }
 
   void _removeItem(int index) async {
-    items.removeAt(index);
-    setState(() {});
-    _storeItems();
+    print("FIXME: removeItem");
+    // items.removeAt(index);
+    // setState(() {});
+    // _storeItems();
   }
 
   // void _moveItem(int index) async {

@@ -10,8 +10,7 @@ void main() async {
 
   await settingsController.loadSettings();
 
-  Database db = new Database("db_test.txt");
-  await db.init();
+  Database db = await Database.init("db_test.txt");
 
-  runApp(MyApp(settingsController: settingsController));
+  runApp(MindApp(db: db, settingsController: settingsController));
 }
