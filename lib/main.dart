@@ -9,21 +9,28 @@ import 'src/settings/settings_service.dart';
 Logger logger = Logger(printer: PrettyPrinter());
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final settingsController = SettingsController(SettingsService());
 
   await settingsController.loadSettings();
 
   String dbPath = "db_test.txt";
-  Database db;
-  try {
-    db = await Database.init(dbPath);
-  } catch (e) {
-    logger.w("DB in $dbPath not valid, setting up a new");
-    // FIXME: Should be careful here, this is for empty file
-    Store scratch = Store(-1, DateTime.now(), DateTime.now(), "scratch", []);
-    db = Database(dbPath, scratch, []);
-    db.write();
-  }
+  Database db = await setupDatabase(dbPath);
 
   runApp(MindApp(db: db, settingsController: settingsController));
+}
+
+Future<Database> setupDatabase(String dbPath) async {
+  return await Database.init(dbPath);
+  // try {
+  // } catch (e) {
+  //   // logger.w(e.);
+  //   logger.w("Proceeding with an empty db");
+  //   // logger
+  //   //     .w("DB in $dbPath not valid or not found, initializing a new database");
+  //   Store scratch = Store(-1, DateTime.now(), DateTime.now(), "scratch", []);
+  //   Database db = Database(dbPath, scratch, []);
+  //   await db.write();
+  //   return db;
+  // }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
-import 'sample_item_details_view.dart';
+import 'entry_view.dart';
 
 import 'dart:convert';
+
+Logger logger = Logger(printer: PrettyPrinter());
 
 // const String SCRATCH_FILENAME = "data.txt";
 // const String STORE_FILENAME = "store.txt";
@@ -30,33 +33,36 @@ Widget appTabsView(Database db) {
               ),
             )),
         body: TabBarView(children: [
-          ItemListView(
+          EntriesView(
               loadEntries: () => db.scratch.entries,
               assignEntries: (List<Entry> entries) =>
                   db.scratch.entries = entries),
-          ItemListView(
+          EntriesView(
               loadEntries: () => db.scratch.entries,
-              assignEntries: (List<Entry> entries) =>
-                  db.scratch.entries = entries),
+              assignEntries: (List<Entry> entries) {
+                logger.i("In assignment");
+                db.scratch.entries = entries;
+                db.write();
+              })
         ]),
       ));
 }
 
-class ItemListView extends StatefulWidget {
+class EntriesView extends StatefulWidget {
   final List<Entry> Function() loadEntries;
   final void Function(List<Entry>) assignEntries;
 
-  const ItemListView(
+  const EntriesView(
       {super.key, required this.loadEntries, required this.assignEntries});
 
   // Used in app.dart
   static const routeName = '/';
 
   @override
-  ItemListViewState createState() => ItemListViewState();
+  EntriesViewState createState() => EntriesViewState();
 }
 
-class ItemListViewState extends State<ItemListView> {
+class EntriesViewState extends State<EntriesView> {
   List<Entry> entries = [];
 
   @override
@@ -95,9 +101,9 @@ class ItemListViewState extends State<ItemListView> {
             child: const Text('Add item', style: TextStyle(fontSize: 18))));
   }
 
-  Widget _buildItem(BuildContext context, Entry item) {
+  Widget _buildItem(BuildContext context, Entry entry) {
     return Dismissible(
-      key: ValueKey(item),
+      key: ValueKey(entry),
       secondaryBackground: Container(
           color: Colors.red,
           alignment: Alignment.centerRight,
@@ -111,17 +117,17 @@ class ItemListViewState extends State<ItemListView> {
       // direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         if (direction == DismissDirection.endToStart) {
-          _removeItem(entries.indexOf(item));
+          _removeItem(entries.indexOf(entry));
         } else if (direction == DismissDirection.startToEnd) {
-          _removeItem(entries.indexOf(item));
+          _removeItem(entries.indexOf(entry));
           // _moveItem(items.indexOf(item));
         }
       },
       child: ListTile(
-        title: Text(item.content),
+        title: Text(entry.content),
+        subtitle: Text(entry.created.toString()),
         onTap: () {
-          Navigator.restorablePushNamed(
-              context, SampleItemDetailsView.routeName);
+          Navigator.restorablePushNamed(context, EntryCard.routeName);
         },
       ),
     );

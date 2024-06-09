@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
+
+Logger logger = Logger(printer: PrettyPrinter());
 
 class Database {
   final String filepath;
@@ -13,27 +16,31 @@ class Database {
     var dbJson = toJson();
     var jsonString = jsonEncode(dbJson);
     await StorageHelper.writeData(jsonString, filepath);
+    logger.i("$jsonString written to $filepath");
   }
 
   static Future<Database> init(String filepath) async {
     final String? jsonString = await StorageHelper.readData(filepath);
+    logger.i("Loaded $jsonString from $filepath");
     if (jsonString == null) {
       throw FormatException("Invalid json in $filepath");
     }
     final myJson = json.decode(jsonString);
     var newScratch = Store.fromJson(myJson['scratch']);
-    var newStores = (myJson['stores'] as List<dynamic>)
+    var newStores = (myJson['stores'] as List<dynamic>? ?? [])
         .map((storeJson) => Store.fromJson(storeJson as Map<String, dynamic>))
         .toList();
     return Database(filepath, newScratch, newStores);
   }
 
   Map<String, dynamic> toJson() {
+    logger.i("Before scratch toJson");
     Map<String, dynamic> scratchJson = scratch.toJson();
-    List<Map<String, dynamic>> storeJsons =
-        stores.map((store) => store.toJson()).toList();
+    // List<Map<String, dynamic>> storeJsons =
+    //     stores.map((store) => store.toJson()).toList();
 
-    return {"scratch": scratchJson, "stores": storeJsons};
+    return {"scratch": scratchJson};
+    // return {"scratch": scratchJson, "stores": storeJsons};
   }
 }
 
@@ -51,7 +58,7 @@ class Store {
       "id": id.toString(),
       "created": created.toIso8601String(),
       "lastChanged": lastChanged.toIso8601String(),
-      "entries": entries.map((entry) => entry.toJson())
+      "entries": entries.map((entry) => entry.toJson()).toList()
     };
   }
 
@@ -59,8 +66,11 @@ class Store {
     int id = int.parse(json['id']);
     DateTime created = DateTime.parse(json['created']);
     DateTime lastChanged = DateTime.parse(json['lastChanged']);
-    String title = json['title'] as String;
-    List<Entry> entries = (json['entries'] as List<dynamic>)
+    String title = json['title'] ??= "[Placeholder]";
+    // if (title == null) {
+    //   title = "[Placeholder]";
+    // }
+    List<Entry> entries = (json['entries'] as List<dynamic>? ?? [])
         .map((entryJson) => Entry.fromJson(entryJson as Map<String, dynamic>))
         .toList();
     return Store(id, created, lastChanged, title, entries);
