@@ -17,37 +17,54 @@ class Database {
 
 class Store {
   final int id;
+  final DateTime created;
+  DateTime lastChanged;
+  String title;
   List<Entry> entries;
 
-  Store(this.id, this.entries);
+  Store(this.id, this.created, this.lastChanged, this.title, this.entries);
 
   String toJson() {
     return jsonEncode({
       "id": id.toString(),
+      "created": created.toString(),
+      "lastChanged": lastChanged.toString(),
       "entries": jsonEncode(entries.map((entry) => jsonEncode(entry)))
     });
   }
 
   factory Store.fromJson(Map<String, dynamic> json) {
-    int id = int.parse(json['id']);
-    List<Entry> entries = json['entries'] as List<Entry>;
-    return Store(id, entries);
+    var id = int.parse(json['id']);
+    var created = DateTime.parse(json['id']);
+    var lastChanged = DateTime.parse(json['id']);
+    var title = json['title'] as String;
+    var entries = json['entries'] as List<Entry>;
+    return Store(id, created, lastChanged, title, entries);
   }
 }
 
 class Entry {
   final int id;
-  final String content;
+  final DateTime created;
+  DateTime lastChanged;
+  String title;
+  String content;
 
-  const Entry(this.id, this.content);
+  Entry(this.id, this.created, this.lastChanged, this.title, this.content);
 
   Map<String, dynamic> toJson() => {
         'id': id.toString(),
+        'created': created,
+        'lastChanged': lastChanged,
+        'title': title,
         'content': content,
       };
 
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
         int.parse(json['id']),
+        DateTime.parse(json['created']),
+        DateTime.parse(json['lastChanged']),
+        json['title'] as String,
         json['content'] as String,
       );
 }
