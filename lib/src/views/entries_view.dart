@@ -35,8 +35,11 @@ Widget appTabsView(Database db) {
         body: TabBarView(children: [
           EntriesView(
               loadEntries: () => db.scratch.entries,
-              assignEntries: (List<Entry> entries) =>
-                  db.scratch.entries = entries),
+              assignEntries: (List<Entry> entries) {
+                logger.i("In assignment");
+                db.scratch.entries = entries;
+                db.write();
+              }),
           EntriesView(
               loadEntries: () => db.scratch.entries,
               assignEntries: (List<Entry> entries) {
@@ -158,6 +161,7 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   void _addNewItem(String content) async {
+    logger.i("Adding new item");
     Entry entry = Entry(-1, DateTime.now(), DateTime.now(), "title", content);
     entries.add(entry);
     widget.assignEntries(entries);
