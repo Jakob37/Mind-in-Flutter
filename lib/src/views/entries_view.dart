@@ -4,14 +4,8 @@ import 'package:mind_flutter/src/ui/entry_card.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
-import 'entry_view.dart';
-
-// import 'dart:convert';
 
 Logger logger = Logger(printer: PrettyPrinter());
-
-// const String SCRATCH_FILENAME = "data.txt";
-// const String STORE_FILENAME = "store.txt";
 
 class EntriesView extends StatefulWidget {
   final List<Entry> Function() loadEntries;

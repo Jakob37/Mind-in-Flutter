@@ -15,24 +15,23 @@ Widget entryCard(BuildContext context, Entry entry, Function() removeEntry) {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: const Icon(Icons.arrow_right, color: Colors.white),
     ),
-    // direction: DismissDirection.endToStart,
     onDismissed: (direction) {
-      // const entryIndex = entries
       if (direction == DismissDirection.endToStart) {
         removeEntry();
-        // _removeItem(entries.indexOf(entry));
       } else if (direction == DismissDirection.startToEnd) {
         removeEntry();
-        // _removeItem(entries.indexOf(entry));
-        // _moveItem(items.indexOf(item));
       }
     },
     child: ListTile(
       title: Text(entry.content),
-      subtitle: Text(entry.created.toString()),
+      subtitle: Text(formatDateTime(entry.created)),
       onTap: () {
         Navigator.restorablePushNamed(context, EntryView.routeName);
       },
     ),
   );
+}
+
+String formatDateTime(DateTime dateTime) {
+  return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
 }
