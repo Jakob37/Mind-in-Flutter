@@ -22,15 +22,4 @@ void main() async {
 
 Future<Database> setupDatabase(String dbPath) async {
   return await Database.init(dbPath);
-  // try {
-  // } catch (e) {
-  //   // logger.w(e.);
-  //   logger.w("Proceeding with an empty db");
-  //   // logger
-  //   //     .w("DB in $dbPath not valid or not found, initializing a new database");
-  //   Store scratch = Store(-1, DateTime.now(), DateTime.now(), "scratch", []);
-  //   Database db = Database(dbPath, scratch, []);
-  //   await db.write();
-  //   return db;
-  // }
 }
