@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
+import 'package:mind_flutter/src/views/entry_view.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
@@ -61,7 +62,9 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
-    return entryCard(context, entry, () {
+    return entryCard(entry, () {
+      Navigator.restorablePushNamed(context, EntryView.routeName);
+    }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);
     });

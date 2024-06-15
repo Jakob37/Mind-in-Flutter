@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/database.dart';
-import 'package:mind_flutter/src/views/entry_view.dart';
+import 'package:mind_flutter/src/util.dart';
 
-Widget entryCard(BuildContext context, Entry entry, Function() removeEntry) {
+Widget entryCard(Entry entry, Function() onTap, Function() onDismiss) {
   return Dismissible(
     key: ValueKey(entry),
     secondaryBackground: Container(
@@ -17,21 +17,15 @@ Widget entryCard(BuildContext context, Entry entry, Function() removeEntry) {
     ),
     onDismissed: (direction) {
       if (direction == DismissDirection.endToStart) {
-        removeEntry();
+        onDismiss();
       } else if (direction == DismissDirection.startToEnd) {
-        removeEntry();
+        onDismiss();
       }
     },
     child: ListTile(
       title: Text(entry.content),
       subtitle: Text(formatDateTime(entry.created)),
-      onTap: () {
-        Navigator.restorablePushNamed(context, EntryView.routeName);
-      },
+      onTap: onTap,
     ),
   );
-}
-
-String formatDateTime(DateTime dateTime) {
-  return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
 }
