@@ -53,8 +53,18 @@ class StoresViewState extends State<StoresView> {
   }
 
   Widget _buildStore(BuildContext context, Store store) {
-    return Dismissible(
-        key: ValueKey(store), child: ListTile(title: Text("Store")));
+    return Container(
+        key: ValueKey(store),
+        child: Card(
+            elevation: 0,
+            color: Colors.transparent,
+            child: ListTile(
+                title: Text(store.title),
+                trailing: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.white),
+                    onPressed: () {
+                      _removeStore(stores.indexOf(store));
+                    }))));
   }
 
   void _onReorder(int oldIndex, int newIndex) {}
@@ -71,10 +81,17 @@ class StoresViewState extends State<StoresView> {
             ));
   }
 
-  void _addNewStore(String content) async {
-    Store store = Store(-1, DateTime.now(), DateTime.now(), "Store", []);
+  void _addNewStore(String title) async {
+    Store store = Store(-1, DateTime.now(), DateTime.now(), title, []);
     stores.add(store);
-    widget.assignStores(stores);
     setState(() {});
+    widget.assignStores(stores);
+  }
+
+  void _removeStore(int index) async {
+    logger.i("remove store");
+    stores.removeAt(index);
+    setState(() {});
+    widget.assignStores(stores);
   }
 }

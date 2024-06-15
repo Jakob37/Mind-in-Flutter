@@ -39,7 +39,6 @@ Widget appTabsView(Database db) {
               assignStores: (List<Store> stores) {
                 logger.i("Assigning stores");
                 db.stores = stores;
-                // db.scratch.entries = entries;
                 db.write();
               })
         ]),

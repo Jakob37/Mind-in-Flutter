@@ -58,6 +58,7 @@ class Store {
       "id": id.toString(),
       "created": created.toIso8601String(),
       "lastChanged": lastChanged.toIso8601String(),
+      "title": title,
       "entries": entries.map((entry) => entry.toJson()).toList()
     };
   }
@@ -67,9 +68,6 @@ class Store {
     DateTime created = DateTime.parse(json['created']);
     DateTime lastChanged = DateTime.parse(json['lastChanged']);
     String title = json['title'] ??= "[Placeholder]";
-    // if (title == null) {
-    //   title = "[Placeholder]";
-    // }
     List<Entry> entries = (json['entries'] as List<dynamic>? ?? [])
         .map((entryJson) => Entry.fromJson(entryJson as Map<String, dynamic>))
         .toList();
