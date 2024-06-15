@@ -36,10 +36,10 @@ class Database {
   Map<String, dynamic> toJson() {
     logger.i("Before scratch toJson");
     Map<String, dynamic> scratchJson = scratch.toJson();
-    // List<Map<String, dynamic>> storeJsons =
-    //     stores.map((store) => store.toJson()).toList();
+    List<Map<String, dynamic>> storeJsons =
+        stores.map((store) => store.toJson()).toList();
 
-    return {"scratch": scratchJson};
+    return {"scratch": scratchJson, "stores": storeJsons};
     // return {"scratch": scratchJson, "stores": storeJsons};
   }
 }

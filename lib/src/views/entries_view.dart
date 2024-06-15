@@ -1,55 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/storage_helper.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
 import 'entry_view.dart';
 
-import 'dart:convert';
+// import 'dart:convert';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
 // const String SCRATCH_FILENAME = "data.txt";
 // const String STORE_FILENAME = "store.txt";
-const String DB_FILENAME = "db.txt";
-
-Widget appTabsView(Database db) {
-  // final String? itemsJson = await StorageHelper.readData(widget.fileName);
-  // var db = Database.fromJson(json)
-
-  return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: SafeArea(
-              child: TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.edit)),
-                  Tab(icon: Icon(Icons.folder)),
-                ],
-                labelColor: Colors.white,
-              ),
-            )),
-        body: TabBarView(children: [
-          EntriesView(
-              loadEntries: () => db.scratch.entries,
-              assignEntries: (List<Entry> entries) {
-                logger.i("In assignment");
-                db.scratch.entries = entries;
-                db.write();
-              }),
-          EntriesView(
-              loadEntries: () => db.scratch.entries,
-              assignEntries: (List<Entry> entries) {
-                logger.i("In assignment");
-                db.scratch.entries = entries;
-                db.write();
-              })
-        ]),
-      ));
-}
 
 class EntriesView extends StatefulWidget {
   final List<Entry> Function() loadEntries;
@@ -101,7 +62,7 @@ class EntriesViewState extends State<EntriesView> {
                 borderRadius: BorderRadius.circular(8),
               )),
             ),
-            child: const Text('Add item', style: TextStyle(fontSize: 18))));
+            child: const Text('Add entry', style: TextStyle(fontSize: 18))));
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
