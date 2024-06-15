@@ -3,6 +3,7 @@ import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
+import 'package:mind_flutter/src/views/store_view.dart';
 
 class StoresView extends StatefulWidget {
   final List<Store> Function() loadStores;
@@ -57,6 +58,7 @@ class StoresViewState extends State<StoresView> {
   Widget _buildStore(BuildContext context, Store store) {
     return storeCard(context, store, () {
       logger.i("Open another entries page here");
+      Navigator.restorablePushNamed(context, StoreView.routeName);
     }, () {
       _showConfirmModal(context, () {
         _removeStore(stores.indexOf(store));

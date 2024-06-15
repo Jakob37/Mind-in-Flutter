@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/tab_view.dart';
 
 import 'views/entry_view.dart';
@@ -54,6 +55,8 @@ class MindApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case EntryView.routeName:
                     return const EntryView();
+                  case StoreView.routeName:
+                    return const StoreView();
                   case EntriesView.routeName:
                   default:
                     return appTabsView(db);
