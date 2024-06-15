@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class EntryCard extends StatelessWidget {
-  const EntryCard({super.key});
+class EntryView extends StatelessWidget {
+  const EntryView({super.key});
 
   static const routeName = '/sample_item';
 

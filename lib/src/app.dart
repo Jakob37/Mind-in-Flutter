@@ -52,8 +52,8 @@ class MindApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case EntryCard.routeName:
-                    return const EntryCard();
+                  case EntryView.routeName:
+                    return const EntryView();
                   case EntriesView.routeName:
                   default:
                     return appTabsView(db);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:mind_flutter/src/ui/entry_card.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
@@ -66,35 +67,10 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
-    return Dismissible(
-      key: ValueKey(entry),
-      secondaryBackground: Container(
-          color: Colors.red,
-          alignment: Alignment.centerRight,
-          child: const Icon(Icons.delete, color: Colors.white)),
-      background: Container(
-        color: Colors.blue,
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: const Icon(Icons.arrow_right, color: Colors.white),
-      ),
-      // direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          _removeItem(entries.indexOf(entry));
-        } else if (direction == DismissDirection.startToEnd) {
-          _removeItem(entries.indexOf(entry));
-          // _moveItem(items.indexOf(item));
-        }
-      },
-      child: ListTile(
-        title: Text(entry.content),
-        subtitle: Text(entry.created.toString()),
-        onTap: () {
-          Navigator.restorablePushNamed(context, EntryCard.routeName);
-        },
-      ),
-    );
+    return entryCard(context, entry, () {
+      int index = entries.indexOf(entry);
+      _removeItem(index);
+    });
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -122,7 +98,6 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   void _addNewItem(String content) async {
-    logger.i("Adding new item");
     Entry entry = Entry(-1, DateTime.now(), DateTime.now(), "title", content);
     entries.add(entry);
     widget.assignEntries(entries);
