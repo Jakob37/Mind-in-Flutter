@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 
 class StoresView extends StatefulWidget {
@@ -63,7 +64,9 @@ class StoresViewState extends State<StoresView> {
                 trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.white),
                     onPressed: () {
-                      _removeStore(stores.indexOf(store));
+                      _showConfirmModal(context, () {
+                        _removeStore(stores.indexOf(store));
+                      });
                     }))));
   }
 
@@ -72,13 +75,25 @@ class StoresViewState extends State<StoresView> {
   void _showModal(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext) => InputModal(
-              onSubmitted: (value) {
+        builder: (BuildContext context) => InputModal(
+              onSubmitted: (text) {
                 setState(() {
-                  _addNewStore(value);
+                  _addNewStore(text);
                 });
               },
             ));
+  }
+
+  void _showConfirmModal(BuildContext context, Function removeStore) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ConfirmModal(onSubmitted: (value) {
+              logger.i("Confirm modal result: $value");
+              if (value) {
+                // _removeStore(index)
+                removeStore();
+              }
+            }));
   }
 
   void _addNewStore(String title) async {
