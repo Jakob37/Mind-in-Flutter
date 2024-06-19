@@ -1,19 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:mind_flutter/src/database.dart';
+
+Logger logger = Logger(printer: PrettyPrinter());
 
 class EntryViewArguments {
-  final String title;
+  final Entry entry;
 
-  EntryViewArguments(this.title);
+  EntryViewArguments(this.entry);
 
-  Map<String, dynamic> toJson() => {'title': title};
+  Map<String, dynamic> toJson() => {'entry': entry.toJson()};
 
   String toJsonString() => json.encode(toJson());
 
   factory EntryViewArguments.fromJsonString(String jsonString) {
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    return EntryViewArguments(jsonMap['title'] as String);
+    Entry entry = Entry.fromJson(jsonMap['entry']);
+    return EntryViewArguments(entry);
   }
 }
 
@@ -26,13 +31,14 @@ class EntryView extends StatelessWidget {
   Widget build(BuildContext context) {
     String argsStr = ModalRoute.of(context)!.settings.arguments as String;
     EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
+    Entry entry = args.entry;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.title),
+        title: Text(entry.content),
       ),
-      body: const Center(
-        child: Text('More Information Here'),
+      body: Center(
+        child: Text(entry.content),
       ),
     );
   }
