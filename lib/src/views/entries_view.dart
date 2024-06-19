@@ -63,7 +63,8 @@ class EntriesViewState extends State<EntriesView> {
 
   Widget _buildItem(BuildContext context, Entry entry) {
     return entryCard(entry, () {
-      Navigator.restorablePushNamed(context, EntryView.routeName);
+      Navigator.restorablePushNamed(context, EntryView.routeName,
+          arguments: EntryViewArguments(entry.content).toJsonString());
     }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);

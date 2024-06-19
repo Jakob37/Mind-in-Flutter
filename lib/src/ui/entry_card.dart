@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/util.dart';
 
-Widget entryCard(Entry entry, Function() onTap, Function() onDismiss) {
+Widget entryCard(Entry entry, Function() onTap, Function() onDismiss,
+    {bool showDate = false}) {
   return Dismissible(
     key: ValueKey(entry),
     secondaryBackground: Container(
@@ -24,7 +25,7 @@ Widget entryCard(Entry entry, Function() onTap, Function() onDismiss) {
     },
     child: ListTile(
       title: Text(entry.content),
-      subtitle: Text(formatDateTime(entry.created)),
+      subtitle: showDate ? Text(formatDateTime(entry.created)) : null,
       onTap: onTap,
     ),
   );
