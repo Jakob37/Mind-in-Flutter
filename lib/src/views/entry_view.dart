@@ -22,23 +22,61 @@ class EntryViewArguments {
   }
 }
 
-class EntryView extends StatelessWidget {
+class EntryView extends StatefulWidget {
   const EntryView({super.key});
 
   static const routeName = '/sample_item';
 
   @override
-  Widget build(BuildContext context) {
-    String argsStr = ModalRoute.of(context)!.settings.arguments as String;
+  EntryViewState createState() => EntryViewState();
+}
+
+class EntryViewState extends State<EntryView> {
+  bool _isEditing = false;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final argsStr = ModalRoute.of(context)!.settings.arguments as String;
     EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
     Entry entry = args.entry;
+    _controller.text = entry.content;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(entry.content),
+        title: _isEditing
+            ? TextField(
+                controller: _controller,
+                autofocus: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: "Enter new content",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white70),
+                ))
+            : Text(_controller.text),
+        actions: [
+          IconButton(
+              icon: Icon(_isEditing ? Icons.check : Icons.edit),
+              onPressed: () {
+                setState(() {
+                  _isEditing = !_isEditing;
+                });
+              })
+        ],
       ),
       body: Center(
-        child: Text(entry.content),
+        child: Text(_controller.text),
       ),
     );
   }
