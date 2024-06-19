@@ -40,7 +40,6 @@ class Database {
         stores.map((store) => store.toJson()).toList();
 
     return {"scratch": scratchJson, "stores": storeJsons};
-    // return {"scratch": scratchJson, "stores": storeJsons};
   }
 }
 
@@ -52,6 +51,15 @@ class Store {
   List<Entry> entries;
 
   Store(this.id, this.created, this.lastChanged, this.title, this.entries);
+
+  Entry? findEntry(int entryId) {
+    for (Entry entry in entries) {
+      if (entry.id == entryId) {
+        return entry;
+      }
+    }
+    return null;
+  }
 
   Map<String, dynamic> toJson() {
     return {

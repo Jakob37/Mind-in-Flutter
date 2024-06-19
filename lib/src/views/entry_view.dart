@@ -23,7 +23,9 @@ class EntryViewArguments {
 }
 
 class EntryView extends StatefulWidget {
-  const EntryView({super.key});
+  final void Function(int, String) assignTitleInScratch;
+
+  const EntryView({super.key, required this.assignTitleInScratch});
 
   static const routeName = '/sample_item';
 
@@ -34,6 +36,7 @@ class EntryView extends StatefulWidget {
 class EntryViewState extends State<EntryView> {
   bool _isEditing = false;
   late TextEditingController _controller;
+  late Entry entry;
 
   @override
   void initState() {
@@ -46,7 +49,7 @@ class EntryViewState extends State<EntryView> {
     super.didChangeDependencies();
     final argsStr = ModalRoute.of(context)!.settings.arguments as String;
     EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
-    Entry entry = args.entry;
+    entry = args.entry;
     _controller.text = entry.content;
   }
 
@@ -72,6 +75,7 @@ class EntryViewState extends State<EntryView> {
                 setState(() {
                   _isEditing = !_isEditing;
                 });
+                widget.assignTitleInScratch(entry.id, _controller.text);
               })
         ],
       ),

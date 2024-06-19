@@ -54,7 +54,16 @@ class MindApp extends StatelessWidget {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
                   case EntryView.routeName:
-                    return const EntryView();
+                    return EntryView(
+                      assignTitleInScratch: (int entryId, String title) {
+                        Entry? result = db.scratch.findEntry(entryId);
+                        if (result == null) {
+                          throw Exception(
+                              "Entry with entry ID $entryId not found in scratch store");
+                        }
+                        result.title = title;
+                      },
+                    );
                   case StoreView.routeName:
                     return const StoreView();
                   case EntriesView.routeName:
