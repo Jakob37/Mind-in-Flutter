@@ -79,8 +79,12 @@ class EntryViewState extends State<EntryView> {
               })
         ],
       ),
-      body: Center(
-        child: Text(_controller.text),
+      body: ListView(
+        children: [
+          Text("ID: ${entry.id.toString()}"),
+          Text("Title: ${entry.title}"),
+          Text("Content: ${entry.content}")
+        ],
       ),
     );
   }

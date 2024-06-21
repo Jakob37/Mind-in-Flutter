@@ -95,8 +95,9 @@ class EntriesViewState extends State<EntriesView> {
     );
   }
 
-  void _addNewItem(String content) async {
-    Entry entry = Entry(-1, DateTime.now(), DateTime.now(), "title", content);
+  void _addNewItem(String title) async {
+    String id = 
+    Entry entry = Entry(-1, DateTime.now(), DateTime.now(), title, "");
     entries.add(entry);
     widget.assignEntries(entries);
     setState(() {});
