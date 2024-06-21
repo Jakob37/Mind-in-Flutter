@@ -27,3 +27,7 @@ String getId(String base) {
 String getEntryId() {
   return getId("entry");
 }
+
+String getStoreId() {
+  return getId("store");
+}

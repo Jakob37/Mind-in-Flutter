@@ -3,6 +3,7 @@ import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
+import 'package:mind_flutter/src/util.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 
 class StoresView extends StatefulWidget {
@@ -94,7 +95,8 @@ class StoresViewState extends State<StoresView> {
   }
 
   void _addNewStore(String title) async {
-    Store store = Store(-1, DateTime.now(), DateTime.now(), title, []);
+    String storeId = getStoreId();
+    Store store = Store(storeId, DateTime.now(), DateTime.now(), title, []);
     stores.add(store);
     setState(() {});
     widget.assignStores(stores);

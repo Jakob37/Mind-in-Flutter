@@ -44,7 +44,7 @@ class Database {
 }
 
 class Store {
-  final int id;
+  final String id;
   final DateTime created;
   DateTime lastChanged;
   String title;
@@ -72,7 +72,7 @@ class Store {
   }
 
   factory Store.fromJson(Map<String, dynamic> json) {
-    int id = int.parse(json['id']);
+    String id = json['id'] as String;
     DateTime created = DateTime.parse(json['created']);
     DateTime lastChanged = DateTime.parse(json['lastChanged']);
     String title = json['title'] ??= "[Placeholder]";
