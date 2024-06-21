@@ -7,10 +7,9 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class Database {
   final String filepath;
-  Store scratch;
-  List<Store> stores;
+  Map<String, Store> stores;
 
-  Database(this.filepath, this.scratch, this.stores);
+  Database(this.filepath, this.stores);
 
   Future<void> write() async {
     var dbJson = toJson();
@@ -24,21 +23,49 @@ class Database {
     if (jsonString == null) {
       throw FormatException("Invalid json in $filepath");
     }
+
     final myJson = json.decode(jsonString);
-    var newScratch = Store.fromJson(myJson['scratch']);
-    var newStores = (myJson['stores'] as List<dynamic>? ?? [])
-        .map((storeJson) => Store.fromJson(storeJson as Map<String, dynamic>))
-        .toList();
-    return Database(filepath, newScratch, newStores);
+    Map<String, dynamic> storeJsons =
+        myJson['stores'] as Map<String, dynamic>? ?? {};
+
+    Map<String, Store> newStores = storeJsons.map((key, storeJson) {
+      return MapEntry(key, Store.fromJson(storeJson as Map<String, dynamic>));
+    });
+
+    return Database(filepath, newStores);
   }
 
   Map<String, dynamic> toJson() {
-    logger.i("Before scratch toJson");
-    Map<String, dynamic> scratchJson = scratch.toJson();
-    List<Map<String, dynamic>> storeJsons =
-        stores.map((store) => store.toJson()).toList();
+    Map<String, Map<String, dynamic>> storeJsons =
+        stores.map((key, store) => MapEntry(key, store.toJson()));
 
-    return {"scratch": scratchJson, "stores": storeJsons};
+    return {"stores": storeJsons};
+  }
+
+  Entry? getEntryInStore(String storeId, String entryId) {
+    Store store = stores['storeId'] as Store;
+    Entry entry = store.getEntry(entryId);
+    return entry;
+  }
+
+  List<Entry> getEntries(String storeId) {
+    Store store = stores[storeId] as Store;
+    return store.entries.values.toList();
+  }
+
+  void setEntries(String storeId, List<Entry> entries) {
+    Store store = stores[storeId] as Store;
+    store.entries =
+        Map.fromEntries(entries.map((entry) => MapEntry(entry.id, entry)));
+  }
+
+  List<Store> getStores() {
+    return stores.values.toList();
+  }
+
+  void setStores(List<Store> myStores) {
+    stores =
+        Map.fromEntries(myStores.map((store) => MapEntry(store.id, store)));
   }
 }
 
@@ -47,17 +74,15 @@ class Store {
   final DateTime created;
   DateTime lastChanged;
   String title;
-  List<Entry> entries;
+  Map<String, Entry> entries;
 
   Store(this.id, this.created, this.lastChanged, this.title, this.entries);
 
   Entry? findEntry(String entryId) {
-    for (Entry entry in entries) {
-      if (entry.id == entryId) {
-        return entry;
-      }
+    if (!entries.containsKey(entryId)) {
+      return null;
     }
-    return null;
+    return entries[entryId] as Entry;
   }
 
   Map<String, dynamic> toJson() {
@@ -66,7 +91,7 @@ class Store {
       "created": created.toIso8601String(),
       "lastChanged": lastChanged.toIso8601String(),
       "title": title,
-      "entries": entries.map((entry) => entry.toJson()).toList()
+      "entries": entries.map((key, entry) => MapEntry(key, entry.toJson()))
     };
   }
 
@@ -75,10 +100,14 @@ class Store {
     DateTime created = DateTime.parse(json['created']);
     DateTime lastChanged = DateTime.parse(json['lastChanged']);
     String title = json['title'] ??= "[Placeholder]";
-    List<Entry> entries = (json['entries'] as List<dynamic>? ?? [])
-        .map((entryJson) => Entry.fromJson(entryJson as Map<String, dynamic>))
-        .toList();
+    Map<String, Entry> entries =
+        (json['entries'] as Map<String, dynamic>? ?? {}).map((key, entryJson) =>
+            MapEntry(key, Entry.fromJson(entryJson as Map<String, dynamic>)));
     return Store(id, created, lastChanged, title, entries);
+  }
+
+  Entry getEntry(String entryId) {
+    return entries['entryId'] as Entry;
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/tab_view.dart';
@@ -56,7 +57,8 @@ class MindApp extends StatelessWidget {
                   case EntryView.routeName:
                     return EntryView(
                       assignTitleInScratch: (String entryId, String title) {
-                        Entry? result = db.scratch.findEntry(entryId);
+                        Entry? result =
+                            db.getEntryInStore(scratchStoreId, entryId);
                         if (result == null) {
                           throw Exception(
                               "Entry with entry ID $entryId not found in scratch store");
@@ -69,7 +71,6 @@ class MindApp extends StatelessWidget {
                   case EntriesView.routeName:
                   default:
                     return appTabsView(db);
-                  // return const SampleItemListView();
                 }
               },
             );

@@ -96,7 +96,7 @@ class StoresViewState extends State<StoresView> {
 
   void _addNewStore(String title) async {
     String storeId = getStoreId();
-    Store store = Store(storeId, DateTime.now(), DateTime.now(), title, []);
+    Store store = Store(storeId, DateTime.now(), DateTime.now(), title, {});
     stores.add(store);
     setState(() {});
     widget.assignStores(stores);
