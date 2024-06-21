@@ -11,6 +11,7 @@ class Database {
 
   Database(this.filepath, this.stores);
 
+  // FIXME: The db should probably not know this
   Future<void> write() async {
     var dbJson = toJson();
     var jsonString = jsonEncode(dbJson);
@@ -19,12 +20,21 @@ class Database {
   }
 
   static Future<Database> init(String filepath) async {
+    logger.i("Init db");
+
     final String? jsonString = await StorageHelper.readData(filepath);
-    if (jsonString == null) {
+    logger.i(jsonString);
+    if (jsonString == null || jsonString.isEmpty) {
       throw FormatException("Invalid json in $filepath");
     }
 
-    final myJson = json.decode(jsonString);
+    final dynamic myJson = json.decode(jsonString);
+
+    if (myJson is! Map<String, dynamic>) {
+      throw FormatException(
+          "Expected JSON object but got ${myJson.runtimeType}");
+    }
+
     Map<String, dynamic> storeJsons =
         myJson['stores'] as Map<String, dynamic>? ?? {};
 

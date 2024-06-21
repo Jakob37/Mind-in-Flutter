@@ -14,6 +14,11 @@ class StorageHelper {
     return File('$path/$fileName');
   }
 
+  static Future<bool> fileExists(String fileName) async {
+    final file = await _localFile(fileName);
+    return file.exists();
+  }
+
   static Future<File> writeData(String data, String fileName) async {
     final file = await _localFile(fileName);
     return file.writeAsString(data);
