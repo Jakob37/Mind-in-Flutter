@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
+import 'package:mind_flutter/src/util.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 
 import '../database.dart';
@@ -96,8 +97,8 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   void _addNewItem(String title) async {
-    String id = 
-    Entry entry = Entry(-1, DateTime.now(), DateTime.now(), title, "");
+    String id = getEntryId();
+    Entry entry = Entry(id, DateTime.now(), DateTime.now(), title, "");
     entries.add(entry);
     widget.assignEntries(entries);
     setState(() {});

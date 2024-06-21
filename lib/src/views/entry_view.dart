@@ -23,7 +23,7 @@ class EntryViewArguments {
 }
 
 class EntryView extends StatefulWidget {
-  final void Function(int, String) assignTitleInScratch;
+  final void Function(String, String) assignTitleInScratch;
 
   const EntryView({super.key, required this.assignTitleInScratch});
 

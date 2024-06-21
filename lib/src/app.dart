@@ -55,7 +55,7 @@ class MindApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case EntryView.routeName:
                     return EntryView(
-                      assignTitleInScratch: (int entryId, String title) {
+                      assignTitleInScratch: (String entryId, String title) {
                         Entry? result = db.scratch.findEntry(entryId);
                         if (result == null) {
                           throw Exception(

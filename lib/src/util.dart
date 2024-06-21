@@ -23,3 +23,7 @@ String getId(String base) {
   String randomStr = getRandomString(idLength);
   return "$base-$randomStr";
 }
+
+String getEntryId() {
+  return getId("entry");
+}

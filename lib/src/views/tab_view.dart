@@ -6,7 +6,7 @@ import 'package:mind_flutter/src/views/stores_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-const String DB_FILENAME = "db.txt";
+const String dbFilename = "db.txt";
 
 Widget appTabsView(Database db) {
   // final String? itemsJson = await StorageHelper.readData(widget.fileName);

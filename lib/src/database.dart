@@ -52,7 +52,7 @@ class Store {
 
   Store(this.id, this.created, this.lastChanged, this.title, this.entries);
 
-  Entry? findEntry(int entryId) {
+  Entry? findEntry(String entryId) {
     for (Entry entry in entries) {
       if (entry.id == entryId) {
         return entry;
@@ -84,7 +84,7 @@ class Store {
 }
 
 class Entry {
-  final int id;
+  final String id;
   final DateTime created;
   DateTime lastChanged;
   String title;
@@ -101,7 +101,7 @@ class Entry {
       };
 
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
-        int.parse(json['id']),
+        json['id'] as String,
         DateTime.parse(json['created']),
         DateTime.parse(json['lastChanged']),
         json['title'] as String,
