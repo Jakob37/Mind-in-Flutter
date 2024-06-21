@@ -35,13 +35,13 @@ class EntryView extends StatefulWidget {
 
 class EntryViewState extends State<EntryView> {
   bool _isEditing = false;
-  late TextEditingController _controller;
+  late TextEditingController _titleController;
   late Entry entry;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _titleController = TextEditingController();
   }
 
   @override
@@ -50,24 +50,32 @@ class EntryViewState extends State<EntryView> {
     final argsStr = ModalRoute.of(context)!.settings.arguments as String;
     EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
     entry = args.entry;
-    _controller.text = entry.content;
+    _titleController.text = entry.title;
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> details = [
+      "ID: ${entry.id.toString()}",
+      "Title: ${entry.title}",
+      "Content: ${entry.content}"
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: _isEditing
             ? TextField(
-                controller: _controller,
+                controller: _titleController,
                 autofocus: true,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: "Enter new content",
+                decoration: InputDecoration(
+                  hintText: entry.title,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white70),
+                  hintStyle: const TextStyle(color: Colors.white70),
                 ))
-            : Text(_controller.text),
+            : Text(_titleController.text != ""
+                ? _titleController.text
+                : "[No title]"),
         actions: [
           IconButton(
               icon: Icon(_isEditing ? Icons.check : Icons.edit),
@@ -75,16 +83,19 @@ class EntryViewState extends State<EntryView> {
                 setState(() {
                   _isEditing = !_isEditing;
                 });
-                widget.assignTitleInScratch(entry.id, _controller.text);
+                widget.assignTitleInScratch(entry.id, _titleController.text);
               })
         ],
       ),
-      body: ListView(
-        children: [
-          Text("ID: ${entry.id.toString()}"),
-          Text("Title: ${entry.title}"),
-          Text("Content: ${entry.content}")
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView(
+          children: details.map((detail) {
+            return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(detail, style: const TextStyle(fontSize: 18)));
+          }).toList(),
+        ),
       ),
     );
   }

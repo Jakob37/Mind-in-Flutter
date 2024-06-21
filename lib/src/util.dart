@@ -8,9 +8,9 @@ String getRandomString(int length) {
   const int lowerCaseA = 97;
   const int lowerCaseZ = 122;
   Random random = Random();
-  int charCode = lowerCaseA + random.nextInt(lowerCaseZ - lowerCaseA + 1);
 
   String getRandomChar() {
+    int charCode = lowerCaseA + random.nextInt(lowerCaseZ - lowerCaseA + 1);
     return String.fromCharCode(charCode);
   }
 

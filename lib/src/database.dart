@@ -21,7 +21,6 @@ class Database {
 
   static Future<Database> init(String filepath) async {
     final String? jsonString = await StorageHelper.readData(filepath);
-    logger.i("Loaded $jsonString from $filepath");
     if (jsonString == null) {
       throw FormatException("Invalid json in $filepath");
     }

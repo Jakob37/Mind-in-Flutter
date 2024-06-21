@@ -24,7 +24,7 @@ Widget entryCard(Entry entry, Function() onTap, Function() onDismiss,
       }
     },
     child: ListTile(
-      title: Text(entry.content),
+      title: Text(entry.title != "" ? entry.title : "[No title]"),
       subtitle: showDate ? Text(formatDateTime(entry.created)) : null,
       onTap: onTap,
     ),
