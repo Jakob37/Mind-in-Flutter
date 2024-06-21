@@ -5,10 +5,11 @@ import 'package:mind_flutter/src/storage_helper.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-void writeDb(Database db, String path) async {
-  String dbJsonStr = db.toJsonString();
-  await StorageHelper.writeData(dbJsonStr, path);
-}
+// void writeDb(Database db, String path) async {
+//   String dbJsonStr = db.toJsonString();
+//   logger.i("Writing $dbJsonStr");
+//   await StorageHelper.writeData(dbJsonStr, path);
+// }
 
 class Database {
   Map<String, Store> stores;

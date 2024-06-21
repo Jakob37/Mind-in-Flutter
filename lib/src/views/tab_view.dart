@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
 import 'package:mind_flutter/src/views/stores_view.dart';
 
@@ -32,14 +33,13 @@ Widget appTabsView(Database db) {
               loadEntries: () => db.getEntries(scratchStoreId),
               assignEntries: (List<Entry> entries) {
                 db.setEntries(scratchStoreId, entries);
-                // writeDb(db, dbFileName);
-                // db.write();
+                writeDb(db);
               }),
           StoresView(
               loadStores: () => db.getStores(),
               assignStores: (List<Store> stores) {
                 db.setStores(stores);
-                writeDb(db, dbFileName);
+                writeDb(db);
               })
         ]),
       ));
