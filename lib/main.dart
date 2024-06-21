@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
@@ -36,16 +32,16 @@ Future<Database> setupDatabase(String dbFileName) async {
     logger.i("File not found, creating a new file at $dbFileName (in doc dir)");
     // await file.create(recursive: true);
 
-    final defaultContent = jsonEncode({'stores': {}});
-    StorageHelper.writeData(defaultContent, dbFileName);
+    final defaultDb = makeEmptyDb();
+    StorageHelper.writeData(defaultDb.toJsonString(), dbFileName);
   }
 
   return await Database.init(dbFileName);
 }
 
 // FIXME: Many things to think through here
-Database makeEmptyDb(String filepath) {
+Database makeEmptyDb() {
   Store scratch =
       Store(scratchStoreId, DateTime.now(), DateTime.now(), 'Scratch', {});
-  return Database(filepath, {scratchStoreId: scratch});
+  return Database({scratchStoreId: scratch});
 }

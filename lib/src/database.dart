@@ -5,19 +5,15 @@ import 'package:mind_flutter/src/storage_helper.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
+void writeDb(Database db, String path) async {
+  String dbJsonStr = db.toJsonString();
+  await StorageHelper.writeData(dbJsonStr, path);
+}
+
 class Database {
-  final String filepath;
   Map<String, Store> stores;
 
-  Database(this.filepath, this.stores);
-
-  // FIXME: The db should probably not know this
-  Future<void> write() async {
-    var dbJson = toJson();
-    var jsonString = jsonEncode(dbJson);
-    await StorageHelper.writeData(jsonString, filepath);
-    logger.i("$jsonString written to $filepath");
-  }
+  Database(this.stores);
 
   static Future<Database> init(String filepath) async {
     logger.i("Init db");
@@ -42,7 +38,7 @@ class Database {
       return MapEntry(key, Store.fromJson(storeJson as Map<String, dynamic>));
     });
 
-    return Database(filepath, newStores);
+    return Database(newStores);
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +46,10 @@ class Database {
         stores.map((key, store) => MapEntry(key, store.toJson()));
 
     return {"stores": storeJsons};
+  }
+
+  String toJsonString() {
+    return json.encode(toJson());
   }
 
   Entry? getEntryInStore(String storeId, String entryId) {

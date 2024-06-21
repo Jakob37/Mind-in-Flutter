@@ -32,13 +32,14 @@ Widget appTabsView(Database db) {
               loadEntries: () => db.getEntries(scratchStoreId),
               assignEntries: (List<Entry> entries) {
                 db.setEntries(scratchStoreId, entries);
-                db.write();
+                // writeDb(db, dbFileName);
+                // db.write();
               }),
           StoresView(
               loadStores: () => db.getStores(),
               assignStores: (List<Store> stores) {
                 db.setStores(stores);
-                db.write();
+                writeDb(db, dbFileName);
               })
         ]),
       ));
