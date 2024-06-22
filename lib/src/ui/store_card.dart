@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
 
 Widget storeCard(BuildContext context, Store store, Function() onPressed,
@@ -11,7 +12,9 @@ Widget storeCard(BuildContext context, Store store, Function() onPressed,
           child: ListTile(
               title: Text(store.title),
               onTap: onPressed,
-              trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  onPressed: onIconPressed))));
+              trailing: store.id != scratchStoreId
+                  ? IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.white),
+                      onPressed: onIconPressed)
+                  : null)));
 }

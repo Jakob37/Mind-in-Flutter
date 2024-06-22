@@ -78,6 +78,18 @@ class Database {
     stores =
         Map.fromEntries(myStores.map((store) => MapEntry(store.id, store)));
   }
+
+  Store getStore(String storeId) {
+    return stores[storeId] as Store;
+  }
+
+  void updateEntryTitle(String storeId, String entryId, String entryTitle) {
+    logger.i("$storeId $entryId $entryTitle");
+    Store store = getStore(storeId);
+    logger.i(json.encode(store.toJson()));
+    Entry entry = store.getEntry(entryId);
+    entry.title = entryTitle;
+  }
 }
 
 class Store {
@@ -118,7 +130,7 @@ class Store {
   }
 
   Entry getEntry(String entryId) {
-    return entries['entryId'] as Entry;
+    return entries[entryId] as Entry;
   }
 }
 

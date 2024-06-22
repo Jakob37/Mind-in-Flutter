@@ -5,6 +5,9 @@ import 'package:mind_flutter/src/storage_helper.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-void writeDb(Database db) {
+void writeDb(Database db, {bool verbose = false}) {
+  if (verbose) {
+    logger.i(db.toJsonString());
+  }
   StorageHelper.writeData(db.toJsonString(), dbFileName);
 }

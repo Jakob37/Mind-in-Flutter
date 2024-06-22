@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/tab_view.dart';
 
@@ -10,6 +12,8 @@ import 'views/entry_view.dart';
 import 'views/entries_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
+
+Logger logger = Logger(printer: PrettyPrinter());
 
 /// The Widget that configures your application.
 class MindApp extends StatelessWidget {
@@ -57,13 +61,16 @@ class MindApp extends StatelessWidget {
                   case EntryView.routeName:
                     return EntryView(
                       assignTitleInScratch: (String entryId, String title) {
-                        Entry? result =
-                            db.getEntryInStore(scratchStoreId, entryId);
-                        if (result == null) {
-                          throw Exception(
-                              "Entry with entry ID $entryId not found in scratch store");
-                        }
-                        result.title = title;
+                        logger.i("In assignTitleInScratch");
+                        db.updateEntryTitle(scratchStoreId, entryId, title);
+                        writeDb(db, verbose: true);
+                        // Entry? result =n
+                        //     db.getEntryInStore(scratchStoreId, entryId);
+                        // if (result == null) {
+                        //   throw Exception(
+                        //       "Entry with entry ID $entryId not found in scratch store");
+                        // }
+                        // result.title = title;
                       },
                     );
                   case StoreView.routeName:

@@ -8,11 +8,8 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class EntryViewArguments {
   final Entry entry;
-
   EntryViewArguments(this.entry);
-
   Map<String, dynamic> toJson() => {'entry': entry.toJson()};
-
   String toJsonString() => json.encode(toJson());
 
   factory EntryViewArguments.fromJsonString(String jsonString) {
@@ -24,9 +21,7 @@ class EntryViewArguments {
 
 class EntryView extends StatefulWidget {
   final void Function(String, String) assignTitleInScratch;
-
   const EntryView({super.key, required this.assignTitleInScratch});
-
   static const routeName = '/sample_item';
 
   @override
@@ -36,12 +31,14 @@ class EntryView extends StatefulWidget {
 class EntryViewState extends State<EntryView> {
   bool _isEditing = false;
   late TextEditingController _titleController;
+  late TextEditingController _contentController;
   late Entry entry;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController();
+    _contentController = TextEditingController();
   }
 
   @override
@@ -51,15 +48,16 @@ class EntryViewState extends State<EntryView> {
     EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
     entry = args.entry;
     _titleController.text = entry.title;
+    _contentController.text = entry.content;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> details = [
-      "ID: ${entry.id.toString()}",
-      "Title: ${entry.title}",
-      "Content: ${entry.content}"
-    ];
+    // List<String> details = [
+    //   "ID: ${entry.id.toString()}",
+    //   "Title: ${entry.title}",
+    //   "Content: ${entry.content}"
+    // ];
 
     return Scaffold(
       appBar: AppBar(
@@ -89,13 +87,25 @@ class EntryViewState extends State<EntryView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: details.map((detail) {
-            return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(detail, style: const TextStyle(fontSize: 18)));
-          }).toList(),
-        ),
+        child: ListView(children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text("ID: ${entry.id}",
+                  style: const TextStyle(fontSize: 14))),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Content:", style: const TextStyle(fontSize: 18)),
+                  IconButton(icon: Icon(Icons.edit), onPressed: () {})
+                ]),
+          ),
+          // Text("Content:", style: const TextStyle(fontSize: 18))),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(entry.content, style: const TextStyle(fontSize: 18)))
+        ]),
       ),
     );
   }

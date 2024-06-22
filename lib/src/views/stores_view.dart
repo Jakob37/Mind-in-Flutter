@@ -85,9 +85,8 @@ class StoresViewState extends State<StoresView> {
   void _showConfirmModal(BuildContext context, Function removeStore) {
     showDialog(
         context: context,
-        builder: (BuildContext context) => ConfirmModal(onSubmitted: (value) {
-              logger.i("Confirm modal result: $value");
-              if (value) {
+        builder: (BuildContext context) => ConfirmModal(onSubmitted: (yes) {
+              if (yes) {
                 // _removeStore(index)
                 removeStore();
               }
