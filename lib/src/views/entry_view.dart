@@ -97,10 +97,9 @@ class EntryViewState extends State<EntryView> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Content:", style: TextStyle(fontSize: 18)),
-                  IconButton(icon: const Icon(Icons.edit), onPressed: () {})
-                ]
-                ),
+                  Text("Content:", style: const TextStyle(fontSize: 18)),
+                  IconButton(icon: Icon(Icons.edit), onPressed: () {})
+                ]),
           ),
           // Text("Content:", style: const TextStyle(fontSize: 18))),
           Padding(
