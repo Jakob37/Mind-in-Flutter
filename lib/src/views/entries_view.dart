@@ -63,16 +63,14 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
-    var args = EntryViewArguments(entry, () {}).toJsonString();
-
-    // var args = {
-    //   'entry': entry,
-    //   'updateEntries': updateEntries
-    // }
+    logger.i(entry.toJsonString());
+    EntryViewArguments args = EntryViewArguments(entry, (Entry entry) {
+      // logger.i("Received entry: ${entry.toJsonString()}");
+      setState(() {});
+    });
 
     return entryCard(entry, () {
-      Navigator.restorablePushNamed(context, EntryView.routeName,
-          arguments: args);
+      Navigator.pushNamed(context, EntryView.routeName, arguments: args);
     }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);

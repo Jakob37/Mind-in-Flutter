@@ -143,6 +143,10 @@ class Entry {
 
   Entry(this.id, this.created, this.lastChanged, this.title, this.content);
 
+  String toJsonString() {
+    return json.encode(toJson());
+  }
+
   Map<String, dynamic> toJson() => {
         'id': id.toString(),
         'created': created.toIso8601String(),

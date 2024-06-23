@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/database.dart';
@@ -10,14 +8,6 @@ class EntryViewArguments {
   final Entry entry;
   final Function(Entry) updateEntries;
   EntryViewArguments(this.entry, this.updateEntries);
-  Map<String, dynamic> toJson() => {'entry': entry.toJson()};
-  String toJsonString() => json.encode(toJson());
-
-  factory EntryViewArguments.fromJsonString(String jsonString) {
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
-    Entry entry = Entry.fromJson(jsonMap['entry']);
-    return EntryViewArguments(entry);
-  }
 }
 
 class EntryView extends StatefulWidget {
@@ -34,6 +24,7 @@ class EntryViewState extends State<EntryView> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
   late Entry entry;
+  late Function(Entry) updateEntries;
 
   @override
   void initState() {
@@ -45,9 +36,10 @@ class EntryViewState extends State<EntryView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final argsStr = ModalRoute.of(context)!.settings.arguments as String;
-    EntryViewArguments args = EntryViewArguments.fromJsonString(argsStr);
+    final EntryViewArguments args =
+        ModalRoute.of(context)!.settings.arguments as EntryViewArguments;
     entry = args.entry;
+    updateEntries = args.updateEntries;
     _titleController.text = entry.title;
     _contentController.text = entry.content;
   }
@@ -86,6 +78,7 @@ class EntryViewState extends State<EntryView> {
                   _isEditing = !_isEditing;
                 });
                 widget.assignTitleInScratch(entry.id, _titleController.text);
+                updateEntries(entry);
               })
         ],
       ),
@@ -102,7 +95,7 @@ class EntryViewState extends State<EntryView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Content:", style: TextStyle(fontSize: 18)),
-                  IconButton(icon: Icon(Icons.edit), onPressed: () {})
+                  IconButton(icon: const Icon(Icons.edit), onPressed: () {})
                 ]),
           ),
           // Text("Content:", style: const TextStyle(fontSize: 18))),
