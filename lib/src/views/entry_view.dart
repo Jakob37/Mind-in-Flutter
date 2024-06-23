@@ -8,7 +8,8 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class EntryViewArguments {
   final Entry entry;
-  EntryViewArguments(this.entry);
+  final Function(Entry) updateEntries;
+  EntryViewArguments(this.entry, this.updateEntries);
   Map<String, dynamic> toJson() => {'entry': entry.toJson()};
   String toJsonString() => json.encode(toJson());
 
@@ -52,13 +53,14 @@ class EntryViewState extends State<EntryView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // List<String> details = [
-    //   "ID: ${entry.id.toString()}",
-    //   "Title: ${entry.title}",
-    //   "Content: ${entry.content}"
-    // ];
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: _isEditing
@@ -79,6 +81,8 @@ class EntryViewState extends State<EntryView> {
               icon: Icon(_isEditing ? Icons.check : Icons.edit),
               onPressed: () {
                 setState(() {
+                  entry.title = _titleController.text;
+                  entry.content = _contentController.text;
                   _isEditing = !_isEditing;
                 });
                 widget.assignTitleInScratch(entry.id, _titleController.text);
@@ -97,7 +101,7 @@ class EntryViewState extends State<EntryView> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Content:", style: const TextStyle(fontSize: 18)),
+                  const Text("Content:", style: TextStyle(fontSize: 18)),
                   IconButton(icon: Icon(Icons.edit), onPressed: () {})
                 ]),
           ),

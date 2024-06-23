@@ -27,12 +27,12 @@ class EntriesViewState extends State<EntriesView> {
   List<Entry> entries = [];
 
   @override
-  void initState() {
-    super.initState();
-    var loadEntries = widget.loadEntries();
+  void didChangeDependencies() {
+    List<Entry> myEntries = widget.loadEntries();
     setState(() {
-      entries = loadEntries;
+      entries = myEntries;
     });
+    super.didChangeDependencies();
   }
 
   @override
@@ -63,9 +63,16 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
+    var args = EntryViewArguments(entry, () {}).toJsonString();
+
+    // var args = {
+    //   'entry': entry,
+    //   'updateEntries': updateEntries
+    // }
+
     return entryCard(entry, () {
       Navigator.restorablePushNamed(context, EntryView.routeName,
-          arguments: EntryViewArguments(entry).toJsonString());
+          arguments: args);
     }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);

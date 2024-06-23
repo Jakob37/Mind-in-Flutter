@@ -61,16 +61,8 @@ class MindApp extends StatelessWidget {
                   case EntryView.routeName:
                     return EntryView(
                       assignTitleInScratch: (String entryId, String title) {
-                        logger.i("In assignTitleInScratch");
                         db.updateEntryTitle(scratchStoreId, entryId, title);
                         writeDb(db, verbose: true);
-                        // Entry? result =n
-                        //     db.getEntryInStore(scratchStoreId, entryId);
-                        // if (result == null) {
-                        //   throw Exception(
-                        //       "Entry with entry ID $entryId not found in scratch store");
-                        // }
-                        // result.title = title;
                       },
                     );
                   case StoreView.routeName:
