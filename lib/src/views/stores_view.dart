@@ -59,7 +59,7 @@ class StoresViewState extends State<StoresView> {
   Widget _buildStore(BuildContext context, Store store) {
     return storeCard(context, store, () {
       logger.i("Open another entries page here");
-      Navigator.restorablePushNamed(context, StoreView.routeName,
+      Navigator.pushNamed(context, StoreView.routeName,
           arguments: StoreViewArguments(store, () {
             setState(() {});
           }));

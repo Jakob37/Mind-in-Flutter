@@ -17,13 +17,6 @@ class ConfirmModalState extends State<ConfirmModal> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Confirm"),
-      // content: TextField(
-      //   controller: _controller,
-      //   decoration: const InputDecoration(hintText: "..."),
-      //   autofocus: true,
-      //   focusNode: _focusNode,
-      //   maxLines: null,
-      // ),
       actions: [
         TextButton(
           onPressed: () {
