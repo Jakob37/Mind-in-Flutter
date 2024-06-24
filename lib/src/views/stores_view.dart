@@ -60,7 +60,9 @@ class StoresViewState extends State<StoresView> {
     return storeCard(context, store, () {
       logger.i("Open another entries page here");
       Navigator.restorablePushNamed(context, StoreView.routeName,
-          arguments: StoreViewArguments(store.title).toJsonString());
+          arguments: StoreViewArguments(store, () {
+            setState(() {});
+          }));
     }, () {
       _showConfirmModal(context, () {
         _removeStore(stores.indexOf(store));

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/ui/edit_title.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
 class EntryViewArguments {
   final Entry entry;
-  final Function(Entry) updateEntries;
-  EntryViewArguments(this.entry, this.updateEntries);
+  final Function() refreshParent;
+  EntryViewArguments(this.entry, this.refreshParent);
 }
 
 class EntryView extends StatefulWidget {
@@ -20,16 +21,15 @@ class EntryView extends StatefulWidget {
 }
 
 class EntryViewState extends State<EntryView> {
-  bool _isEditing = false;
-  late TextEditingController _titleController;
+  // late TextEditingController _titleController;
   late TextEditingController _contentController;
   late Entry entry;
-  late Function(Entry) updateEntries;
+  late Function() refreshParent;
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController();
+    // _titleController = TextEditingController();
     _contentController = TextEditingController();
   }
 
@@ -39,14 +39,14 @@ class EntryViewState extends State<EntryView> {
     final EntryViewArguments args =
         ModalRoute.of(context)!.settings.arguments as EntryViewArguments;
     entry = args.entry;
-    updateEntries = args.updateEntries;
-    _titleController.text = entry.title;
+    refreshParent = args.refreshParent;
+    // _titleController.text = entry.title;
     _contentController.text = entry.content;
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
+    // _titleController.dispose();
     _contentController.dispose();
     super.dispose();
   }
@@ -55,32 +55,39 @@ class EntryViewState extends State<EntryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _isEditing
-            ? TextField(
-                controller: _titleController,
-                autofocus: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: entry.title,
-                  border: InputBorder.none,
-                  hintStyle: const TextStyle(color: Colors.white70),
-                ))
-            : Text(_titleController.text != ""
-                ? _titleController.text
-                : "[No title]"),
-        actions: [
-          IconButton(
-              icon: Icon(_isEditing ? Icons.check : Icons.edit),
-              onPressed: () {
-                setState(() {
-                  entry.title = _titleController.text;
-                  entry.content = _contentController.text;
-                  _isEditing = !_isEditing;
-                });
-                widget.assignTitleInScratch(entry.id, _titleController.text);
-                updateEntries(entry);
-              })
-        ],
+        title: EditText(onChange: (String newTitle) {
+          setState(() {
+            entry.title = newTitle;
+          });
+          widget.assignTitleInScratch(entry.id, newTitle);
+          refreshParent();
+        }),
+        // title: _isEditing
+        //     ? TextField(
+        //         controller: _titleController,
+        //         autofocus: true,
+        //         style: const TextStyle(color: Colors.white),
+        //         decoration: InputDecoration(
+        //           hintText: entry.title,
+        //           border: InputBorder.none,
+        //           hintStyle: const TextStyle(color: Colors.white70),
+        //         ))
+        //     : Text(_titleController.text != ""
+        //         ? _titleController.text
+        //         : "[No title]"),
+        // actions: [
+        //   IconButton(
+        //       icon: Icon(_isEditing ? Icons.check : Icons.edit),
+        //       onPressed: () {
+        //         setState(() {
+        //           entry.title = _titleController.text;
+        //           entry.content = _contentController.text;
+        //           _isEditing = !_isEditing;
+        //         });
+        //         widget.assignTitleInScratch(entry.id, _titleController.text);
+        //         refreshParent();
+        //       })
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

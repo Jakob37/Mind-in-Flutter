@@ -66,7 +66,11 @@ class MindApp extends StatelessWidget {
                       },
                     );
                   case StoreView.routeName:
-                    return const StoreView();
+                    return StoreView(
+                        assignTitle: (String storeId, String title) {
+                      db.updateStoreTitle(storeId, title);
+                      writeDb(db, verbose: true);
+                    });
                   case EntriesView.routeName:
                   default:
                     return appTabsView(db);

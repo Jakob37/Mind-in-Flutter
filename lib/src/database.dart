@@ -84,11 +84,14 @@ class Database {
   }
 
   void updateEntryTitle(String storeId, String entryId, String entryTitle) {
-    logger.i("$storeId $entryId $entryTitle");
     Store store = getStore(storeId);
-    logger.i(json.encode(store.toJson()));
     Entry entry = store.getEntry(entryId);
     entry.title = entryTitle;
+  }
+
+  void updateStoreTitle(String storeId, String title) {
+    Store store = getStore(storeId);
+    store.title = title;
   }
 }
 
