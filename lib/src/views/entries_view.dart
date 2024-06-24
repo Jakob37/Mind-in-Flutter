@@ -63,7 +63,6 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
-    logger.i(entry.toJsonString());
     EntryViewArguments args = EntryViewArguments(entry, () {
       setState(() {});
     });

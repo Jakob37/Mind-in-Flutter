@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class EditText extends StatefulWidget {
+  final String text;
   final Function(String) onChange;
-  const EditText({super.key, required this.onChange});
+  const EditText({super.key, required this.text, required this.onChange});
 
   @override
   EditTextState createState() => EditTextState();
@@ -15,7 +16,7 @@ class EditTextState extends State<EditText> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController();
+    _textController = TextEditingController(text: widget.text);
   }
 
   @override
@@ -31,6 +32,7 @@ class EditTextState extends State<EditText> {
           child: _isEditing
               ? TextField(
                   controller: _textController,
+                  autofocus: true,
                   onSubmitted: (newValue) {
                     widget.onChange(newValue);
                     setState(() {
@@ -46,6 +48,7 @@ class EditTextState extends State<EditText> {
           onPressed: () {
             setState(() {
               if (_isEditing) {
+                widget.onChange(_textController.text);
                 _isEditing = false;
               } else {
                 _isEditing = true;

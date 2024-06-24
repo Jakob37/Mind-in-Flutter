@@ -48,13 +48,15 @@ class StoreViewState extends State<StoreView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: EditText(onChange: (String newTitle) {
-            setState(() {
-              store.title = newTitle;
-            });
-            widget.assignTitle(store.id, newTitle);
-            refreshParent();
-          }),
+          title: EditText(
+              text: store.title,
+              onChange: (String newTitle) {
+                setState(() {
+                  store.title = newTitle;
+                });
+                widget.assignTitle(store.id, newTitle);
+                refreshParent();
+              }),
         ),
         body: const Center(child: Text('List the entries here')));
   }

@@ -55,39 +55,15 @@ class EntryViewState extends State<EntryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: EditText(onChange: (String newTitle) {
-          setState(() {
-            entry.title = newTitle;
-          });
-          widget.assignTitleInScratch(entry.id, newTitle);
-          refreshParent();
-        }),
-        // title: _isEditing
-        //     ? TextField(
-        //         controller: _titleController,
-        //         autofocus: true,
-        //         style: const TextStyle(color: Colors.white),
-        //         decoration: InputDecoration(
-        //           hintText: entry.title,
-        //           border: InputBorder.none,
-        //           hintStyle: const TextStyle(color: Colors.white70),
-        //         ))
-        //     : Text(_titleController.text != ""
-        //         ? _titleController.text
-        //         : "[No title]"),
-        // actions: [
-        //   IconButton(
-        //       icon: Icon(_isEditing ? Icons.check : Icons.edit),
-        //       onPressed: () {
-        //         setState(() {
-        //           entry.title = _titleController.text;
-        //           entry.content = _contentController.text;
-        //           _isEditing = !_isEditing;
-        //         });
-        //         widget.assignTitleInScratch(entry.id, _titleController.text);
-        //         refreshParent();
-        //       })
-        // ],
+        title: EditText(
+            text: entry.title,
+            onChange: (String newTitle) {
+              setState(() {
+                entry.title = newTitle;
+              });
+              widget.assignTitleInScratch(entry.id, newTitle);
+              refreshParent();
+            }),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
