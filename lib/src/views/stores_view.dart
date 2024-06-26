@@ -59,7 +59,6 @@ class StoresViewState extends State<StoresView> {
 
   Widget _buildStore(BuildContext context, Store store) {
     return storeCard(context, store, () {
-      logger.i("Open another entries page here");
       void refreshParent() => setState(() {});
 
       void assignTitle(String title) => widget.assignTitle(store.id, title);
@@ -75,7 +74,16 @@ class StoresViewState extends State<StoresView> {
     });
   }
 
-  void _onReorder(int oldIndex, int newIndex) {}
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final Store item = stores.removeAt(oldIndex);
+      stores.insert(newIndex, item);
+      widget.assignStores(stores);
+    });
+  }
 
   void _showModal(BuildContext context) {
     showDialog(

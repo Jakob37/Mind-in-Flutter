@@ -68,7 +68,7 @@ class StoreViewState extends State<StoreView> {
       return ReorderableListView(
         onReorder: _onReorder,
         children: [
-          ...store.getEntries().map((item) => _buildItem(context, item)),
+          ...displayEntries.map((item) => _buildItem(context, item)),
         ],
       );
     }
@@ -126,16 +126,14 @@ class StoreViewState extends State<StoreView> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    logger.w("Currently not implemented");
-    // setState(() {
-    //   if (newIndex > oldIndex) {
-    //     newIndex -= 1;
-    //   }
-    //   Entry entry = store.removeEntryAtIndex(oldIndex);
-
-    //   // entries.insert(newIndex, item);
-    //   // widget.assignEntries(entries);
-    // });
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final Entry item = displayEntries.removeAt(oldIndex);
+      displayEntries.insert(newIndex, item);
+      assignEntries(displayEntries);
+    });
   }
 
   void _addNewEntry(String text) {
