@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
 import 'package:mind_flutter/src/util.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
+
+Logger logger = Logger(printer: PrettyPrinter());
 
 class StoresView extends StatefulWidget {
   final List<Store> Function() loadStores;
@@ -41,19 +46,9 @@ class StoresViewState extends State<StoresView> {
     }
 
     return Scaffold(
-      body: SafeArea(child: Column(children: [Expanded(child: getList())])),
-      bottomNavigationBar: ElevatedButton(
-          onPressed: () => _showModal(context),
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(Colors.transparent),
-            foregroundColor: WidgetStateProperty.all(Colors.white),
-            elevation: WidgetStateProperty.all(0),
-            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-          child: const Text('Add store', style: TextStyle(fontSize: 18))),
-    );
+        body: SafeArea(child: Column(children: [Expanded(child: getList())])),
+        bottomNavigationBar:
+            bottomButton("Add store", () => _showModal(context)));
   }
 
   Widget _buildStore(BuildContext context, Store store) {

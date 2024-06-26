@@ -135,6 +135,30 @@ class Store {
   Entry getEntry(String entryId) {
     return entries[entryId] as Entry;
   }
+
+  void addEntry(Entry entry) {
+    entries[entry.id] = entry;
+  }
+
+  List<Entry> getEntries() {
+    return entries.values.toList();
+  }
+
+  void removeEntry(String entryId) {
+    entries.remove(entryId);
+  }
+
+  Entry getEntryAtIndex(int index) {
+    List<Entry> entries = getEntries();
+    Entry entry = entries[index];
+    return entry;
+  }
+
+  // Entry removeEntryAtIndex(int index) {
+  //   // Entry entry = getEntryAtIndex(index);
+  //   // entries.remove(entry.id);
+  //   // return entry;
+  // }
 }
 
 class Entry {
