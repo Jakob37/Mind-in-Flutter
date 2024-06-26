@@ -91,15 +91,13 @@ class StoresViewState extends State<StoresView> {
   }
 
   void _addNewStore(String title) async {
-    String storeId = getStoreId();
-    Store store = Store(storeId, DateTime.now(), DateTime.now(), title, {});
+    Store store = getStore(title);
     stores.add(store);
     setState(() {});
     widget.assignStores(stores);
   }
 
   void _removeStore(int index) async {
-    logger.i("remove store");
     stores.removeAt(index);
     setState(() {});
     widget.assignStores(stores);
