@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/edit_title.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
-import 'package:mind_flutter/src/util.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -13,12 +13,16 @@ Logger logger = Logger(printer: PrettyPrinter());
 class StoreViewArguments {
   final Store store;
   final Function() refreshParent;
-  StoreViewArguments(this.store, this.refreshParent);
+  final Function(String) assignTitle;
+  final Function(List<Entry>) assignEntries;
+  StoreViewArguments(
+      this.store, this.refreshParent, this.assignTitle, this.assignEntries);
 }
 
 class StoreView extends StatefulWidget {
-  final void Function(String, String) assignTitle;
-  const StoreView({super.key, required this.assignTitle});
+  // final void Function(String, String) assignTitle;
+  // final void Function(List<Entry>) assignEntries;
+  const StoreView({super.key});
   static const routeName = '/store_view';
 
   @override
@@ -28,7 +32,10 @@ class StoreView extends StatefulWidget {
 class StoreViewState extends State<StoreView> {
   late TextEditingController _titleController;
   late Store store;
+  late List<Entry> displayEntries;
   late Function() refreshParent;
+  late Function(String) assignTitle;
+  late Function(List<Entry>) assignEntries;
 
   @override
   void initState() {
@@ -42,7 +49,10 @@ class StoreViewState extends State<StoreView> {
     final StoreViewArguments args =
         ModalRoute.of(context)!.settings.arguments as StoreViewArguments;
     store = args.store;
+    displayEntries = store.getEntries();
     refreshParent = args.refreshParent;
+    assignTitle = args.assignTitle;
+    assignEntries = args.assignEntries;
     _titleController.text = store.title;
   }
 
@@ -71,7 +81,7 @@ class StoreViewState extends State<StoreView> {
               setState(() {
                 store.title = newTitle;
               });
-              widget.assignTitle(store.id, newTitle);
+              assignTitle(newTitle);
               refreshParent();
             }),
       ),
@@ -91,10 +101,16 @@ class StoreViewState extends State<StoreView> {
     return entryCard(entry, () {
       Navigator.pushNamed(context, EntryView.routeName, arguments: args);
     }, () {
-      logger.w("Removal not implemented");
-      // int index = entries.indexOf(entry);
-      // _removeItem(index);
+      // logger.w("Removal not implemented");
+      int index = displayEntries.indexOf(entry);
+      _removeItem(index);
     });
+  }
+
+  void _removeItem(int index) async {
+    displayEntries.removeAt(index);
+    setState(() {});
+    assignEntries(displayEntries);
   }
 
   void _showModal(BuildContext context) {

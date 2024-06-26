@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
-import 'package:mind_flutter/src/util.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -14,9 +14,15 @@ Logger logger = Logger(printer: PrettyPrinter());
 class StoresView extends StatefulWidget {
   final List<Store> Function() loadStores;
   final void Function(List<Store>) assignStores;
+  final void Function(String storeId, List<Entry> entries) assignEntries;
+  final void Function(String storeId, String title) assignTitle;
 
   const StoresView(
-      {super.key, required this.loadStores, required this.assignStores});
+      {super.key,
+      required this.loadStores,
+      required this.assignStores,
+      required this.assignEntries,
+      required this.assignTitle});
 
   // FIXME: ?
   static const routeName = '/';
@@ -54,10 +60,14 @@ class StoresViewState extends State<StoresView> {
   Widget _buildStore(BuildContext context, Store store) {
     return storeCard(context, store, () {
       logger.i("Open another entries page here");
+      void refreshParent() => setState(() {});
+
+      void assignTitle(String title) => widget.assignTitle(store.id, title);
+      void assignEntries(List<Entry> entries) =>
+          (List<Entry> entries) => widget.assignEntries(store.id, entries);
       Navigator.pushNamed(context, StoreView.routeName,
-          arguments: StoreViewArguments(store, () {
-            setState(() {});
-          }));
+          arguments: StoreViewArguments(
+              store, refreshParent, assignTitle, assignEntries));
     }, () {
       _showConfirmModal(context, () {
         _removeStore(stores.indexOf(store));

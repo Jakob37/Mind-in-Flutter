@@ -40,6 +40,14 @@ Widget appTabsView(Database db) {
               assignStores: (List<Store> stores) {
                 db.setStores(stores);
                 writeDb(db);
+              },
+              assignEntries: (String storeId, List<Entry> entries) {
+                db.setEntries(storeId, entries);
+                writeDb(db);
+              },
+              assignTitle: (String storeId, String title) {
+                db.updateStoreTitle(storeId, title);
+                writeDb(db);
               })
         ]),
       ));
