@@ -42,6 +42,7 @@ Widget appTabsView(Database db) {
                 writeDb(db);
               },
               assignEntries: (String storeId, List<Entry> entries) {
+                logger.w("storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
                 db.setEntries(storeId, entries);
                 writeDb(db);
               },

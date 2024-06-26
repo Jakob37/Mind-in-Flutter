@@ -62,8 +62,11 @@ class StoresViewState extends State<StoresView> {
       void refreshParent() => setState(() {});
 
       void assignTitle(String title) => widget.assignTitle(store.id, title);
-      void assignEntries(List<Entry> entries) =>
-          (List<Entry> entries) => widget.assignEntries(store.id, entries);
+      void assignEntries(List<Entry> entries) {
+        logger.w("assign entries in stores_view");
+        widget.assignEntries(store.id, entries);
+      }
+
       Navigator.pushNamed(context, StoreView.routeName,
           arguments: StoreViewArguments(
               store, refreshParent, assignTitle, assignEntries));

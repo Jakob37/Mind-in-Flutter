@@ -136,11 +136,13 @@ class StoreViewState extends State<StoreView> {
     });
   }
 
+  // FIXME: Do this better
   void _addNewEntry(String text) {
     String entryId = getEntryId();
     Entry entry = Entry(entryId, DateTime.now(), DateTime.now(), text, "");
     store.addEntry(entry);
+    displayEntries.add(entry);
+    assignEntries(displayEntries);
     setState(() {});
-    refreshParent();
   }
 }
