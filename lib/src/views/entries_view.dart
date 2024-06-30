@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/ui/bottom_button.dart';
+import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 
@@ -63,6 +64,14 @@ class EntriesViewState extends State<EntriesView> {
     }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);
+    }, () {
+      logger.w("Swipe right");
+      bool isConfirmed = _showTransferModal(context);
+      logger.w("isConfirmed $isConfirmed");
+      if (isConfirmed) {
+        int index = entries.indexOf(entry);
+        _removeItem(index);
+      }
     });
   }
 
@@ -88,6 +97,21 @@ class EntriesViewState extends State<EntriesView> {
         },
       ),
     );
+  }
+
+  Future<bool> _showTransferModal(BuildContext context) async {
+    logger.w("Swipe right");
+    // New Dialog needed
+
+    final result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => ConfirmModal(
+              onSubmitted: (confirmed) {
+                return confirmed;
+              },
+            ));
+
+    return result ?? false;
   }
 
   void _addNewItem(String title) async {

@@ -104,6 +104,10 @@ class StoreViewState extends State<StoreView> {
       // logger.w("Removal not implemented");
       int index = displayEntries.indexOf(entry);
       _removeItem(index);
+    }, () {
+      // logger.w("Removal not implemented");
+      int index = displayEntries.indexOf(entry);
+      _removeItem(index);
     });
   }
 
