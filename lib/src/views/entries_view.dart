@@ -66,11 +66,13 @@ class EntriesViewState extends State<EntriesView> {
       _removeItem(index);
     }, () async {
       logger.w("Swipe right");
-      bool isConfirmed = await _showTransferModal(context);
-      logger.w("isConfirmed $isConfirmed");
-      if (isConfirmed) {
+      String? modalResult = await _showTransferModal(context);
+      // logger.w("isConfirmed $isConfirmed");
+      if (modalResult != null) {
         int index = entries.indexOf(entry);
         _removeItem(index);
+
+        logger.w("Add to the store here!");
       }
     });
   }
@@ -99,11 +101,11 @@ class EntriesViewState extends State<EntriesView> {
     );
   }
 
-  Future<bool> _showTransferModal(BuildContext context) async {
+  Future<String?> _showTransferModal(BuildContext context) async {
     logger.w("Swipe right");
     // New Dialog needed
 
-    final result = await showDialog<bool>(
+    final result = await showDialog<String?>(
         context: context,
         builder: (BuildContext context) => ConfirmModal(
               onSubmitted: (confirmed) {
@@ -112,7 +114,7 @@ class EntriesViewState extends State<EntriesView> {
               },
             ));
 
-    return result ?? false;
+    return result;
   }
 
   void _addNewItem(String title) async {
