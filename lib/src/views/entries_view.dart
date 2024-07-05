@@ -64,9 +64,9 @@ class EntriesViewState extends State<EntriesView> {
     }, () {
       int index = entries.indexOf(entry);
       _removeItem(index);
-    }, () {
+    }, () async {
       logger.w("Swipe right");
-      bool isConfirmed = _showTransferModal(context);
+      bool isConfirmed = await _showTransferModal(context);
       logger.w("isConfirmed $isConfirmed");
       if (isConfirmed) {
         int index = entries.indexOf(entry);
@@ -107,6 +107,7 @@ class EntriesViewState extends State<EntriesView> {
         context: context,
         builder: (BuildContext context) => ConfirmModal(
               onSubmitted: (confirmed) {
+                logger.w("onSubmitted with confirmed $confirmed");
                 return confirmed;
               },
             ));

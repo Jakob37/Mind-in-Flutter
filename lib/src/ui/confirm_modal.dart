@@ -21,7 +21,7 @@ class ConfirmModalState extends State<ConfirmModal> {
         TextButton(
           onPressed: () {
             widget.onSubmitted(false);
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
           child: const Text('Cancel'),
         ),
@@ -29,7 +29,7 @@ class ConfirmModalState extends State<ConfirmModal> {
           onPressed: () {
             widget.onSubmitted(true);
             // widget.onSubmitted(_controller.text);
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           },
           child: const Text('Confirm'),
         ),
