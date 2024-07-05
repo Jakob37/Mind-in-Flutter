@@ -36,6 +36,7 @@ Widget appTabsView(Database db) {
               writeDb(db);
             },
             loadStores: () => db.getStores(),
+            addEntryToStore: (String storeId, Entry entry) => db.addEntryToStore(storeId, entry),
           ),
           StoresView(
               loadStores: () => db.getStores(),

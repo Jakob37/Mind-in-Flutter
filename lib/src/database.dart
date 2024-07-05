@@ -74,6 +74,11 @@ class Database {
     return stores.values.toList();
   }
 
+  void addEntryToStore(String storeId, Entry entry) {
+    Store store = getStore(storeId);
+    store.addEntry(entry);
+  }
+
   void setStores(List<Store> myStores) {
     stores =
         Map.fromEntries(myStores.map((store) => MapEntry(store.id, store)));

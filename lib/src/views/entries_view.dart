@@ -16,12 +16,14 @@ class EntriesView extends StatefulWidget {
   final List<Entry> Function() loadEntries;
   final List<Store> Function() loadStores;
   final void Function(List<Entry>) assignEntries;
+  final void Function(String storeId, Entry entry) addEntryToStore;
 
   const EntriesView(
       {super.key,
       required this.loadEntries,
       required this.assignEntries,
-      required this.loadStores});
+      required this.loadStores,
+      required this.addEntryToStore});
 
   // Used in app.dart
   static const routeName = '/';
@@ -68,16 +70,14 @@ class EntriesViewState extends State<EntriesView> {
       Navigator.pushNamed(context, EntryView.routeName, arguments: args);
     }, () {
       int index = entries.indexOf(entry);
-      _removeItem(index);
+      _removeEntry(index);
     }, () async {
-      logger.w("Swipe right");
-      String? modalResult = await _showTransferModal(context);
-      // logger.w("isConfirmed $isConfirmed");
-      if (modalResult != null) {
+      String? storeId = await _showTransferModal(context);
+      if (storeId != null) {
         int index = entries.indexOf(entry);
-        _removeItem(index);
+        Entry removedEntry = await _removeEntry(index);
 
-        logger.w("Add to the store here!");
+        widget.addEntryToStore(storeId, removedEntry);
       }
     });
   }
@@ -107,9 +107,6 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Future<String?> _showTransferModal(BuildContext context) async {
-    logger.w("Swipe right");
-    // New Dialog needed
-
     List<Store> stores = widget.loadStores();
     List<Option> options = stores
         .map((store) => Option(id: store.id, displayText: store.title))
@@ -119,7 +116,6 @@ class EntriesViewState extends State<EntriesView> {
       context: context,
       builder: (BuildContext context) => SelectModal(
           onSubmitted: (confirmed) {
-            logger.w("onSubmitted with confirmed $confirmed");
             return confirmed;
           },
           options: options),
@@ -135,9 +131,10 @@ class EntriesViewState extends State<EntriesView> {
     setState(() {});
   }
 
-  void _removeItem(int index) async {
-    entries.removeAt(index);
+  Future<Entry> _removeEntry(int index) async {
+    Entry removedEntry = entries.removeAt(index);
     setState(() {});
     widget.assignEntries(entries);
+    return removedEntry;
   }
 }
