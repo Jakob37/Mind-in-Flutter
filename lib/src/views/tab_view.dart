@@ -30,11 +30,13 @@ Widget appTabsView(Database db) {
             )),
         body: TabBarView(children: [
           EntriesView(
-              loadEntries: () => db.getEntries(scratchStoreId),
-              assignEntries: (List<Entry> entries) {
-                db.setEntries(scratchStoreId, entries);
-                writeDb(db);
-              }),
+            loadEntries: () => db.getEntries(scratchStoreId),
+            assignEntries: (List<Entry> entries) {
+              db.setEntries(scratchStoreId, entries);
+              writeDb(db);
+            },
+            loadStores: () => db.getStores(),
+          ),
           StoresView(
               loadStores: () => db.getStores(),
               assignStores: (List<Store> stores) {
@@ -42,7 +44,8 @@ Widget appTabsView(Database db) {
                 writeDb(db);
               },
               assignEntries: (String storeId, List<Entry> entries) {
-                logger.w("storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
+                logger.w(
+                    "storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
                 db.setEntries(storeId, entries);
                 writeDb(db);
               },

@@ -4,6 +4,7 @@ import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
+import 'package:mind_flutter/src/ui/select_modal.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 
 import '../database.dart';
@@ -13,10 +14,14 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class EntriesView extends StatefulWidget {
   final List<Entry> Function() loadEntries;
+  final List<Store> Function() loadStores;
   final void Function(List<Entry>) assignEntries;
 
   const EntriesView(
-      {super.key, required this.loadEntries, required this.assignEntries});
+      {super.key,
+      required this.loadEntries,
+      required this.assignEntries,
+      required this.loadStores});
 
   // Used in app.dart
   static const routeName = '/';
@@ -105,14 +110,20 @@ class EntriesViewState extends State<EntriesView> {
     logger.w("Swipe right");
     // New Dialog needed
 
+    List<Store> stores = widget.loadStores();
+    List<Option> options = stores
+        .map((store) => Option(id: store.id, displayText: store.title))
+        .toList();
+
     final result = await showDialog<String?>(
-        context: context,
-        builder: (BuildContext context) => ConfirmModal(
-              onSubmitted: (confirmed) {
-                logger.w("onSubmitted with confirmed $confirmed");
-                return confirmed;
-              },
-            ));
+      context: context,
+      builder: (BuildContext context) => SelectModal(
+          onSubmitted: (confirmed) {
+            logger.w("onSubmitted with confirmed $confirmed");
+            return confirmed;
+          },
+          options: options),
+    );
 
     return result;
   }
