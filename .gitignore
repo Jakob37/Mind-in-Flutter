@@ -45,3 +45,4 @@ app.*.map.json
 # My own
 google-services.json
 values.xml
+config.dart

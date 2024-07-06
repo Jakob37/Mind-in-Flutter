@@ -5,6 +5,7 @@ import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
 import 'src/app.dart';
+import 'src/config.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
@@ -17,7 +18,13 @@ void main() async {
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
   Database db = await setupDatabase(dbFileName);
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: firebaseApiKey,
+          appId: firebaseAppId,
+          messagingSenderId: firebaseMessagingSenderId,
+          projectId: firebaseProjectId,
+          storageBucket: firebaseStorageBucket));
   logger.i("Firebase initialized!");
   runApp(MindApp(db: db, settingsController: settingsController));
 }
