@@ -242,10 +242,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "809865e14cd77423472d23be3498397e7049b2b2"
+      resolved-ref: dfbf4c2991bb81b7f682a2569909a71b5711b39e
       url: "git@github.com:Jakob37/Shared-Flutter.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.4"
   shared_preferences:
     dependency: "direct main"
     description:
