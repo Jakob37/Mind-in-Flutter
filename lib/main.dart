@@ -8,16 +8,16 @@ import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+
 Logger logger = Logger(printer: PrettyPrinter());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settingsController = SettingsController(SettingsService());
-
   await settingsController.loadSettings();
-
   Database db = await setupDatabase(dbFileName);
-
+  await Firebase.initializeApp();
   runApp(MindApp(db: db, settingsController: settingsController));
 }
 
