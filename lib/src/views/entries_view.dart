@@ -63,20 +63,23 @@ class EntriesViewState extends State<EntriesView> {
       setState(() {});
     });
 
-    return entryCard(entry, () {
-      Navigator.pushNamed(context, EntryView.routeName, arguments: args);
-    }, () {
+    onDismissLeft() {
       int index = entries.indexOf(entry);
       _removeEntry(index);
-    }, () async {
+    }
+
+    onDismissRight() async {
       String? storeId = await _showTransferModal(context);
       if (storeId != null) {
         int index = entries.indexOf(entry);
         Entry removedEntry = await _removeEntry(index);
-
         widget.addEntryToStore(storeId, removedEntry);
       }
-    });
+    }
+
+    return entryCard(entry, () {
+      Navigator.pushNamed(context, EntryView.routeName, arguments: args);
+    }, onDismissLeft, onDismissRight);
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -126,9 +129,6 @@ class EntriesViewState extends State<EntriesView> {
     entries.add(entry);
     widget.assignEntries(entries);
     setState(() {});
-
-    Calculator calc = Calculator();
-    logger.w("Calc results: ${calc.addOne(2)}");
   }
 
   Future<Entry> _removeEntry(int index) async {

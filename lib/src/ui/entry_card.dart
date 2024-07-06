@@ -10,6 +10,7 @@ Widget entryCard(Entry entry, Function() onTap, Function() onDismissLeft,
     secondaryBackground: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: const Icon(Icons.delete, color: Colors.white)),
     background: Container(
       color: Colors.blue,
@@ -19,11 +20,6 @@ Widget entryCard(Entry entry, Function() onTap, Function() onDismissLeft,
     ),
     onDismissed: (direction) {
       onDismissLeft();
-      // if (direction == DismissDirection.endToStart) {
-      //   onDismissLeft();
-      // } else if (direction == DismissDirection.startToEnd) {
-      //   onDismissRight();
-      // }
     },
     confirmDismiss: (direction) async {
       if (direction == DismissDirection.startToEnd) {

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
+import 'package:path_provider/path_provider.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
@@ -25,21 +27,32 @@ class Database {
       throw FormatException("Invalid json in $filepath");
     }
 
-    final dynamic myJson = json.decode(jsonString);
+    try {
+      final dynamic myJson = json.decode(jsonString);
 
-    if (myJson is! Map<String, dynamic>) {
-      throw FormatException(
-          "Expected JSON object but got ${myJson.runtimeType}");
+      if (myJson is! Map<String, dynamic>) {
+        throw FormatException(
+            "Expected JSON object but got ${myJson.runtimeType}");
+      }
+
+      Map<String, dynamic> storeJsons =
+          myJson['stores'] as Map<String, dynamic>? ?? {};
+
+      Map<String, Store> newStores = storeJsons.map((key, storeJson) {
+        return MapEntry(key, Store.fromJson(storeJson as Map<String, dynamic>));
+      });
+
+      return Database(newStores);
+    } catch (e) {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String filePath =
+          '${documentsDirectory.path}/invalid_json_${DateTime.now().millisecondsSinceEpoch}.json';
+      final File file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      logger.e("Invalid JSON saved to ${file.path}");
+      throw FormatException("Error parsing JSON: ${e.toString()}");
     }
-
-    Map<String, dynamic> storeJsons =
-        myJson['stores'] as Map<String, dynamic>? ?? {};
-
-    Map<String, Store> newStores = storeJsons.map((key, storeJson) {
-      return MapEntry(key, Store.fromJson(storeJson as Map<String, dynamic>));
-    });
-
-    return Database(newStores);
   }
 
   Map<String, dynamic> toJson() {
