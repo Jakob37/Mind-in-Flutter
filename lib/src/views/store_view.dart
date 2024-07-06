@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/dbutil.dart';
-import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/edit_title.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
+import 'package:shared_flutter_code/shared_flutter_code.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
@@ -87,7 +87,7 @@ class StoreViewState extends State<StoreView> {
       ),
       body: SafeArea(child: Column(children: [Expanded(child: getList())])),
       // body: const Center(child: Text('List the entries here')),
-      bottomNavigationBar: bottomButton("Add entry to store", () {
+      bottomNavigationBar: sharedBottomButton("Add entry to store", () {
         _showModal(context);
       }),
     );

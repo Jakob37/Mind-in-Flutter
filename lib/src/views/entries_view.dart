@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/dbutil.dart';
-import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/ui/select_modal.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
@@ -58,7 +57,7 @@ class EntriesViewState extends State<EntriesView> {
     return Scaffold(
         body: SafeArea(child: Column(children: [Expanded(child: getList())])),
         bottomNavigationBar:
-            bottomButton("Add entry", () => _showModal(context)));
+            sharedBottomButton("Add entry", () => _showModal(context)));
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {

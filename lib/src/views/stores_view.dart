@@ -3,11 +3,11 @@ import 'package:logger/logger.dart';
 
 import 'package:mind_flutter/src/database.dart';
 import 'package:mind_flutter/src/dbutil.dart';
-import 'package:mind_flutter/src/ui/bottom_button.dart';
 import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/input_modal.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
+import 'package:shared_flutter_code/shared_flutter_code.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
@@ -54,7 +54,7 @@ class StoresViewState extends State<StoresView> {
     return Scaffold(
         body: SafeArea(child: Column(children: [Expanded(child: getList())])),
         bottomNavigationBar:
-            bottomButton("Add store", () => _showModal(context)));
+            sharedBottomButton("Add store", () => _showModal(context)));
   }
 
   Widget _buildStore(BuildContext context, Store store) {
