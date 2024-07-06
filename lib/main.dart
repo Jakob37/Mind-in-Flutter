@@ -18,6 +18,7 @@ void main() async {
   await settingsController.loadSettings();
   Database db = await setupDatabase(dbFileName);
   await Firebase.initializeApp();
+  logger.i("Firebase initialized!");
   runApp(MindApp(db: db, settingsController: settingsController));
 }
 
