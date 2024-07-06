@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/database.dart';
-import 'package:mind_flutter/src/ui/edit_title.dart';
+import '../../../../shared_flutter_code/lib/edit_text.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
