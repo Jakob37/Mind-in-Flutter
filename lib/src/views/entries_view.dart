@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/dbutil.dart';
 import 'package:mind_flutter/src/ui/bottom_button.dart';
-import 'package:mind_flutter/src/ui/confirm_modal.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/ui/select_modal.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
+import 'package:shared_flutter_code/shared_flutter_code.dart';
 
 import '../database.dart';
 import '../ui/input_modal.dart';
@@ -129,6 +129,9 @@ class EntriesViewState extends State<EntriesView> {
     entries.add(entry);
     widget.assignEntries(entries);
     setState(() {});
+
+    Calculator calc = Calculator();
+    logger.w("Calc results: ${calc.addOne(2)}");
   }
 
   Future<Entry> _removeEntry(int index) async {
