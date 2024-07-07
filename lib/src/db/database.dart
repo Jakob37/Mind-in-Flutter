@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/storage_helper.dart';
+import 'package:mind_flutter/src/db/base_database.dart';
+import 'package:mind_flutter/src/db/storage_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -12,19 +13,6 @@ Logger logger = Logger(printer: PrettyPrinter());
 //   logger.i("Writing $dbJsonStr");
 //   await StorageHelper.writeData(dbJsonStr, path);
 // }
-
-abstract class BaseDatabase {
-  Future<Entry?> getEntryInStore(String storeId, String entryId);
-  Future<List<Entry>> getEntries(String storeId);
-  Future<void> setEntries(String storeId, List<Entry> entries);
-  Future<List<Store>> getStores();
-  Future<Store> getStore(String storeId);
-  Future<void> addEntryToStore(String storeId, Entry entry);
-  Future<void> setStores(List<Store> stores);
-  Future<void> updateEntryTitle(
-      String storeId, String entryId, String entryTitle);
-  Future<void> updateStoreTitle(String storeId, String title);
-}
 
 class Database implements BaseDatabase {
   Map<String, Store> stores;

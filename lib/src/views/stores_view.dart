@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
 import 'package:mind_flutter/src/views/store_view.dart';

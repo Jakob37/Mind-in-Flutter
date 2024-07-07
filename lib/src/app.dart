@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
-import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/tab_view.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
-import 'package:mind_flutter/src/database.dart';
+import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
-import 'package:mind_flutter/src/storage_helper.dart';
+import 'package:mind_flutter/src/db/storage_helper.dart';
 
 import 'src/app.dart';
 import 'src/config.dart';
