@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/database.dart';
-import 'package:mind_flutter/src/dbutil.dart';
+import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/storage_helper.dart';
 
 import 'src/app.dart';
@@ -19,7 +19,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
-  Database db = await setupDatabase(dbFileName);
+  Database db = Database({});
+  // Database db = await setupDatabase(dbFileName);
+  // Database db = await setupDatabase(dbFileName);
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: firebaseApiKey,
@@ -29,50 +31,26 @@ void main() async {
           storageBucket: firebaseStorageBucket));
   logger.i("Firebase initialized!");
 
-  await addEntryToFirestore();
+  // await addEntryToFirestore(getEmptyEntry("Test entry"));
 
   runApp(MindApp(db: db, settingsController: settingsController));
 }
 
-Future<void> addEntryToFirestore() async {
-  CollectionReference entries =
-      FirebaseFirestore.instance.collection('entries');
-  Entry testEntry = getEmptyEntry("Test entry");
-  try {
-    await entries.add({
-      'id': testEntry.id,
-      'created': testEntry.created,
-      'lastChanged': testEntry.lastChanged,
-      'title': testEntry.title,
-      'content': testEntry.content
-    });
-    logger.i("Entry added to Firestore");
-  } catch (e) {
-    logger.e("Failed to add entry: $e");
-  }
-}
+// Future<Database> setupDatabase(String dbFileName) async {
+//   if (!await StorageHelper.fileExists(dbFileName)) {
+//     logger.i("File not found, creating a new file at $dbFileName (in doc dir)");
+//     // await file.create(recursive: true);
 
-Future<Database> setupDatabase(String dbFileName) async {
-  // final directory = await getApplicationDocumentsDirectory();
-  // final dbPath = '${directory.path}/$dbFileName';
-  // final file = File(dbPath);
+//     final defaultDb = makeEmptyDb();
+//     StorageHelper.writeData(defaultDb.toJsonString(), dbFileName);
+//   }
 
-  // StorageHelper.writeData(data, fileName)
+//   return await Database.init(dbFileName);
+// }
 
-  if (!await StorageHelper.fileExists(dbFileName)) {
-    logger.i("File not found, creating a new file at $dbFileName (in doc dir)");
-    // await file.create(recursive: true);
-
-    final defaultDb = makeEmptyDb();
-    StorageHelper.writeData(defaultDb.toJsonString(), dbFileName);
-  }
-
-  return await Database.init(dbFileName);
-}
-
-// FIXME: Many things to think through here
-Database makeEmptyDb() {
-  Store scratch =
-      Store(scratchStoreId, DateTime.now(), DateTime.now(), 'Scratch', {});
-  return Database({scratchStoreId: scratch});
-}
+// // FIXME: Many things to think through here
+// Database makeEmptyDb() {
+//   Store scratch =
+//       Store(scratchStoreId, DateTime.now(), DateTime.now(), 'Scratch', {});
+//   return Database({scratchStoreId: scratch});
+// }

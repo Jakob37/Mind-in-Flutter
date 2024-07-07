@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 import 'package:mind_flutter/src/database.dart';
-import 'package:mind_flutter/src/dbutil.dart';
+import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:shared_flutter_code/shared_flutter_code.dart';
@@ -10,7 +10,7 @@ import 'package:shared_flutter_code/shared_flutter_code.dart';
 Logger logger = Logger(printer: PrettyPrinter());
 
 class StoresView extends StatefulWidget {
-  final List<Store> Function() loadStores;
+  final Future<List<Store>> Function() loadStores;
   final void Function(List<Store>) assignStores;
   final void Function(String storeId, List<Entry> entries) assignEntries;
   final void Function(String storeId, String title) assignTitle;
@@ -36,8 +36,8 @@ class StoresViewState extends State<StoresView> {
   void initState() {
     super.initState();
     var loadStores = widget.loadStores();
-    setState(() {
-      stores = loadStores;
+    setState(() async {
+      stores = await loadStores;
     });
   }
 

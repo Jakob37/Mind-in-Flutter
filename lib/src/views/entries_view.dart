@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/dbutil.dart';
+import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 import 'package:shared_flutter_code/shared_flutter_code.dart';
@@ -10,8 +10,8 @@ import '../database.dart';
 Logger logger = Logger(printer: PrettyPrinter());
 
 class EntriesView extends StatefulWidget {
-  final List<Entry> Function() loadEntries;
-  final List<Store> Function() loadStores;
+  final Future<List<Entry>> Function() loadEntries;
+  final Future<List<Store>> Function() loadStores;
   final void Function(List<Entry>) assignEntries;
   final void Function(String storeId, Entry entry) addEntryToStore;
 
@@ -33,8 +33,8 @@ class EntriesViewState extends State<EntriesView> {
   List<Entry> entries = [];
 
   @override
-  void didChangeDependencies() {
-    List<Entry> myEntries = widget.loadEntries();
+  void didChangeDependencies() async {
+    List<Entry> myEntries = await widget.loadEntries();
     setState(() {
       entries = myEntries;
     });
@@ -107,7 +107,7 @@ class EntriesViewState extends State<EntriesView> {
   }
 
   Future<String?> _showTransferModal(BuildContext context) async {
-    List<Store> stores = widget.loadStores();
+    List<Store> stores = await widget.loadStores();
     List<Option> options = stores
         .map((store) => Option(id: store.id, displayText: store.title))
         .toList();

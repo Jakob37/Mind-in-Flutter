@@ -13,7 +13,20 @@ Logger logger = Logger(printer: PrettyPrinter());
 //   await StorageHelper.writeData(dbJsonStr, path);
 // }
 
-class Database {
+abstract class BaseDatabase {
+  Future<Entry?> getEntryInStore(String storeId, String entryId);
+  Future<List<Entry>> getEntries(String storeId);
+  Future<void> setEntries(String storeId, List<Entry> entries);
+  Future<List<Store>> getStores();
+  Future<Store> getStore(String storeId);
+  Future<void> addEntryToStore(String storeId, Entry entry);
+  Future<void> setStores(List<Store> stores);
+  Future<void> updateEntryTitle(
+      String storeId, String entryId, String entryTitle);
+  Future<void> updateStoreTitle(String storeId, String title);
+}
+
+class Database implements BaseDatabase {
   Map<String, Store> stores;
 
   Database(this.stores);
@@ -66,50 +79,65 @@ class Database {
     return json.encode(toJson());
   }
 
-  Entry? getEntryInStore(String storeId, String entryId) {
+  @override
+  Future<Entry?> getEntryInStore(String storeId, String entryId) {
     Store store = stores['storeId'] as Store;
     Entry entry = store.getEntry(entryId);
-    return entry;
+    return Future.value(entry);
   }
 
-  List<Entry> getEntries(String storeId) {
+  @override
+  Future<List<Entry>> getEntries(String storeId) {
     Store store = stores[storeId] as Store;
-    return store.entries.values.toList();
+    return Future.value(store.entries.values.toList());
   }
 
-  void setEntries(String storeId, List<Entry> entries) {
+  @override
+  Future<void> setEntries(String storeId, List<Entry> entries) {
     Store store = stores[storeId] as Store;
     store.entries =
         Map.fromEntries(entries.map((entry) => MapEntry(entry.id, entry)));
+    return Future.value(null);
   }
 
-  List<Store> getStores() {
-    return stores.values.toList();
+  @override
+  Future<List<Store>> getStores() {
+    return Future.value(stores.values.toList());
   }
 
-  void addEntryToStore(String storeId, Entry entry) {
-    Store store = getStore(storeId);
+  @override
+  Future<void> addEntryToStore(String storeId, Entry entry) async {
+    Store store = await getStore(storeId);
     store.addEntry(entry);
+    return Future.value(null);
   }
 
-  void setStores(List<Store> myStores) {
+  @override
+  Future<void> setStores(List<Store> myStores) {
     stores =
         Map.fromEntries(myStores.map((store) => MapEntry(store.id, store)));
+    return Future.value(null);
   }
 
-  Store getStore(String storeId) {
-    return stores[storeId] as Store;
+  @override
+  Future<Store> getStore(String storeId) {
+    return Future.value(stores[storeId] as Store);
   }
 
-  void updateEntryTitle(String storeId, String entryId, String entryTitle) {
-    Store store = getStore(storeId);
+  @override
+  Future<void> updateEntryTitle(
+      String storeId, String entryId, String entryTitle) async {
+    Store store = await getStore(storeId);
     Entry entry = store.getEntry(entryId);
     entry.title = entryTitle;
+    return Future.value(null);
   }
 
-  void updateStoreTitle(String storeId, String title) {
-    Store store = getStore(storeId);
+  @override
+  Future<void> updateStoreTitle(String storeId, String title) async {
+    Store store = await getStore(storeId);
     store.title = title;
+    return Future.value(null);
   }
 }
 
