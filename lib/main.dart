@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
+import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/database.dart';
+import 'package:mind_flutter/src/db/firebase_database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/db/storage_helper.dart';
 
 import 'src/app.dart';
-import 'src/config.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
@@ -19,9 +20,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
-  Database db = Database({});
-  // Database db = await setupDatabase(dbFileName);
-  // Database db = await setupDatabase(dbFileName);
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: firebaseApiKey,
@@ -30,11 +28,23 @@ void main() async {
           projectId: firebaseProjectId,
           storageBucket: firebaseStorageBucket));
   logger.i("Firebase initialized!");
+  BaseDatabase db = FirebaseDatabase();
 
-  // await addEntryToFirestore(getEmptyEntry("Test entry"));
+  // await ensureScratchStoreExists(db);
 
   runApp(MindApp(db: db, settingsController: settingsController));
 }
+
+// Future<void> ensureScratchStoreExists(BaseDatabase db) async {
+//   try {
+//     Store scratchStore = await db.getStore('scratch');
+//     logger.i("Scratch store exists");
+//   } catch (e) {
+//     logger.i("Scratch store does not exist. Creating ...");
+//     Store scratchStore = getStore('Store');
+//     await db.
+//   }
+// }
 
 // Future<Database> setupDatabase(String dbFileName) async {
 //   if (!await StorageHelper.fileExists(dbFileName)) {

@@ -8,12 +8,6 @@ import 'package:path_provider/path_provider.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-// void writeDb(Database db, String path) async {
-//   String dbJsonStr = db.toJsonString();
-//   logger.i("Writing $dbJsonStr");
-//   await StorageHelper.writeData(dbJsonStr, path);
-// }
-
 class Database implements BaseDatabase {
   Map<String, Store> stores;
 

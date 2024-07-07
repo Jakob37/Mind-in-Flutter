@@ -10,41 +10,66 @@ class FirebaseDatabase implements BaseDatabase {
 
   @override
   Future<Entry?> getEntryInStore(String storeId, String entryId) async {
-    DocumentSnapshot<Map<String, dynamic>> storeDoc =
+    DocumentSnapshot<Map<String, dynamic>> entryDoc =
         await firestore.collection(entriesKey).doc(entryId).get();
 
-    if (storeDoc.exists) {
-      Map<String, dynamic>? data = storeDoc.data();
+    if (entryDoc.exists) {
+      Map<String, dynamic>? data = entryDoc.data();
       if (data != null) {
         return Entry.fromJson(data);
       }
     }
-    return null;
+    throw ArgumentError("No entry found for entryId $entryId");
   }
 
   @override
-  Future<List<Entry>> getEntries(String storeId) {
-    throw UnimplementedError();
+  Future<List<Entry>> getEntries(String storeId) async {
+    Store store = await getStore(storeId);
+    return store.getEntries();
   }
 
   @override
   Future<void> setEntries(String storeId, List<Entry> entries) {
-    throw UnimplementedError();
+    throw UnimplementedError(
+        "This will not be used in Firebase implementation");
   }
 
   @override
-  Future<List<Store>> getStores() {
-    throw UnimplementedError();
+  Future<List<Store>> getStores() async {
+    QuerySnapshot<Map<String, dynamic>> storesQuerySnapshot =
+        await firestore.collection(storesKey).get();
+
+    return storesQuerySnapshot.docs.map((doc) {
+      return Store.fromJson(doc.data());
+    }).toList();
   }
 
   @override
-  Future<Store> getStore(String storeId) {
-    throw UnimplementedError();
+  Future<void> addStore() async {
+    
   }
 
   @override
-  Future<void> addEntryToStore(String storeId, Entry entry) {
-    throw UnimplementedError();
+  Future<Store> getStore(String storeId) async {
+    DocumentSnapshot<Map<String, dynamic>> storeDoc =
+        await firestore.collection(storesKey).doc(storeId).get();
+
+    if (!storeDoc.exists) {
+      throw ArgumentError("No store found for storeId $storeId");
+    }
+
+    Map<String, dynamic>? data = storeDoc.data();
+
+    if (data == null) {
+      throw ArgumentError("Data for storeId $storeId is null");
+    }
+
+    return Store.fromJson(data);
+  }
+
+  @override
+  Future<void> addEntryToStore(String storeId, Entry entry) async {
+    firestore.collection(entriesKey).doc(entry.id).set(entry.toJson());
   }
 
   @override
@@ -54,8 +79,15 @@ class FirebaseDatabase implements BaseDatabase {
 
   @override
   Future<void> updateEntryTitle(
-      String storeId, String entryId, String entryTitle) {
-    throw UnimplementedError();
+      String storeId, String entryId, String title) async {
+    DocumentReference entryRef = firestore.collection(entriesKey).doc(entryId);
+    await entryRef.update({"title": title});
+  }
+
+  @override
+  Future<void> updateEntry(String storeId, Entry entry) async {
+    DocumentReference entryRef = firestore.collection(entriesKey).doc(entry.id);
+    await entryRef.update(entry.toJson());
   }
 
   @override

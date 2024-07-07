@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
+import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
@@ -17,7 +18,7 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 /// The Widget that configures your application.
 class MindApp extends StatelessWidget {
-  final Database db;
+  final BaseDatabase db;
   final SettingsController settingsController;
 
   const MindApp({
@@ -62,7 +63,7 @@ class MindApp extends StatelessWidget {
                     return EntryView(
                       assignTitleInScratch: (String entryId, String title) {
                         db.updateEntryTitle(scratchStoreId, entryId, title);
-                        writeDb(db, verbose: true);
+                        // writeDb(db, verbose: true);
                       },
                     );
                   case StoreView.routeName:

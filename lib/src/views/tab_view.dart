@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
+import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
@@ -10,7 +11,7 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 const String dbFilename = "db.txt";
 
-Widget appTabsView(Database db) {
+Widget appTabsView(BaseDatabase db) {
   // final String? itemsJson = await StorageHelper.readData(widget.fileName);
   // var db = Database.fromJson(json)
 
@@ -33,29 +34,29 @@ Widget appTabsView(Database db) {
             loadEntries: () => db.getEntries(scratchStoreId),
             assignEntries: (List<Entry> entries) {
               db.setEntries(scratchStoreId, entries);
-              writeDb(db);
+              // writeDb(db);
             },
             loadStores: () => db.getStores(),
             addEntryToStore: (String storeId, Entry entry) {
               db.addEntryToStore(storeId, entry);
-              writeDb(db);
+              // writeDb(db);
             },
           ),
           StoresView(
               loadStores: () => db.getStores(),
               assignStores: (List<Store> stores) {
                 db.setStores(stores);
-                writeDb(db);
+                // writeDb(db);
               },
               assignEntries: (String storeId, List<Entry> entries) {
                 logger.w(
                     "storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
                 db.setEntries(storeId, entries);
-                writeDb(db);
+                // writeDb(db);
               },
               assignTitle: (String storeId, String title) {
                 db.updateStoreTitle(storeId, title);
-                writeDb(db);
+                // writeDb(db);
               })
         ]),
       ));
