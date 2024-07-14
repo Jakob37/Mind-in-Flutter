@@ -4,9 +4,29 @@ import 'package:mind_flutter/src/db/_database.dart';
 
 const storesKey = 'stores';
 const entriesKey = 'entries';
+const scratchStoreId = 'scratch';
 
 class FirebaseDatabase implements BaseDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  @override
+  Future<void> ensureSetup() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> storeDoc =
+          await firestore.collection(storesKey).doc(scratchStoreId).get();
+
+      if (!storeDoc.exists) {
+        // Store scratchStore = createStore(scratchStoreId);
+        String storeId = scratchStoreId;
+        Store scratchStore =
+            Store(storeId, DateTime.now(), DateTime.now(), "Scratch", {});
+
+        await addStore(scratchStore);
+      }
+    } catch (e) {
+      throw Exception("Error checking/adding scratch store: $e");
+    }
+  }
 
   @override
   Future<Entry> getEntryInStore(String storeId, String entryId) async {

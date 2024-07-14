@@ -8,7 +8,7 @@ Logger logger = Logger(printer: PrettyPrinter());
 Future<void> addEntryToFirestore(Entry entry) async {
   CollectionReference entries =
       FirebaseFirestore.instance.collection('entries');
-  Entry testEntry = getEmptyEntry("Test entry");
+  Entry testEntry = createEmptyEntry("Test entry");
   try {
     await entries.add({
       'id': testEntry.id,

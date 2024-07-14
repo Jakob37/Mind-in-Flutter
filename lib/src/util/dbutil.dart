@@ -27,13 +27,13 @@ String getStoreId() {
   return getId("store");
 }
 
-Store getStore(String title) {
+Store createStore(String title) {
   String storeId = getStoreId();
   Store store = Store(storeId, DateTime.now(), DateTime.now(), title, {});
   return store;
 }
 
-Entry getEmptyEntry(String title) {
+Entry createEmptyEntry(String title) {
   String id = getEntryId();
   Entry entry = Entry(id, DateTime.now(), DateTime.now(), title, "");
   return entry;

@@ -25,6 +25,7 @@ void main() async {
           storageBucket: firebaseStorageBucket));
   logger.i("Firebase initialized!");
   BaseDatabase db = FirebaseDatabase();
+  await db.ensureSetup();
 
   // await ensureScratchStoreExists(db);
 

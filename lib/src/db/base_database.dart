@@ -1,6 +1,8 @@
 import 'package:mind_flutter/src/db/_database.dart';
 
 abstract class BaseDatabase {
+  Future<void> ensureSetup();
+
   Future<void> addStore(Store store);
   Future<void> removeStore(String storeId);
   Future<List<Store>> getStores();

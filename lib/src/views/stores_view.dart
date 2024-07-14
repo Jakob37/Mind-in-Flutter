@@ -37,9 +37,13 @@ class StoresViewState extends State<StoresView> {
   @override
   void initState() {
     super.initState();
-    var loadStores = widget.loadStores();
-    setState(() async {
-      stores = await loadStores;
+    _loadStores();
+  }
+
+  _loadStores() async {
+    List<Store> stores = await widget.loadStores();
+    setState(() {
+      stores = stores;
     });
   }
 
@@ -112,7 +116,7 @@ class StoresViewState extends State<StoresView> {
   }
 
   void _addNewStore(String title) async {
-    Store store = getStore(title);
+    Store store = createStore(title);
     stores.add(store);
     setState(() {});
     widget.addStore(store);
