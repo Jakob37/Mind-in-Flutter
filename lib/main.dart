@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
-import 'package:mind_flutter/src/db/database.dart';
 import 'package:mind_flutter/src/db/firebase_database.dart';
-import 'package:mind_flutter/src/util/dbutil.dart';
-import 'package:mind_flutter/src/db/storage_helper.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 

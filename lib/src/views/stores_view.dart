@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import 'package:mind_flutter/src/db/database.dart';
+import 'package:mind_flutter/src/db/_database.dart';
 import 'package:mind_flutter/src/util/dbutil.dart';
 import 'package:mind_flutter/src/ui/store_card.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
@@ -11,14 +11,16 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class StoresView extends StatefulWidget {
   final Future<List<Store>> Function() loadStores;
-  final void Function(List<Store>) assignStores;
+  final void Function(Store) addStore;
+  final void Function(String) removeStore;
   final void Function(String storeId, List<Entry> entries) assignEntries;
   final void Function(String storeId, String title) assignTitle;
 
   const StoresView(
       {super.key,
       required this.loadStores,
-      required this.assignStores,
+      required this.addStore,
+      required this.removeStore,
       required this.assignEntries,
       required this.assignTitle});
 
@@ -82,7 +84,7 @@ class StoresViewState extends State<StoresView> {
       }
       final Store item = stores.removeAt(oldIndex);
       stores.insert(newIndex, item);
-      widget.assignStores(stores);
+      widget.removeStore(item.id);
     });
   }
 
@@ -113,12 +115,12 @@ class StoresViewState extends State<StoresView> {
     Store store = getStore(title);
     stores.add(store);
     setState(() {});
-    widget.assignStores(stores);
+    widget.addStore(store);
   }
 
   void _removeStore(int index) async {
-    stores.removeAt(index);
+    Store removedStore = stores.removeAt(index);
     setState(() {});
-    widget.assignStores(stores);
+    widget.removeStore(removedStore.id);
   }
 }

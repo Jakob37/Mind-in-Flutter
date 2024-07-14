@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
-import 'package:mind_flutter/src/db/database.dart';
-import 'package:mind_flutter/src/util/dbutil.dart';
+import 'package:mind_flutter/src/db/_database.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
 import 'package:mind_flutter/src/views/stores_view.dart';
 
@@ -31,9 +30,9 @@ Widget appTabsView(BaseDatabase db) {
             )),
         body: TabBarView(children: [
           EntriesView(
-            loadEntries: () => db.getEntries(scratchStoreId),
+            loadEntries: () => db.getEntriesInStore(scratchStoreId),
             assignEntries: (List<Entry> entries) {
-              db.setEntries(scratchStoreId, entries);
+              db.setStoreEntries(scratchStoreId, entries);
               // writeDb(db);
             },
             loadStores: () => db.getStores(),
@@ -44,19 +43,19 @@ Widget appTabsView(BaseDatabase db) {
           ),
           StoresView(
               loadStores: () => db.getStores(),
-              assignStores: (List<Store> stores) {
-                db.setStores(stores);
-                // writeDb(db);
+              addStore: (Store store) {
+                db.addStore(store);
+              },
+              removeStore: (String storeId) {
+                db.removeStore(storeId);
               },
               assignEntries: (String storeId, List<Entry> entries) {
                 logger.w(
                     "storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
-                db.setEntries(storeId, entries);
-                // writeDb(db);
+                db.setStoreEntries(storeId, entries);
               },
               assignTitle: (String storeId, String title) {
                 db.updateStoreTitle(storeId, title);
-                // writeDb(db);
               })
         ]),
       ));

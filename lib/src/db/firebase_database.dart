@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
-import 'package:mind_flutter/src/db/database.dart';
+import 'package:mind_flutter/src/db/_database.dart';
 
 const storesKey = 'stores';
 const entriesKey = 'entries';
@@ -9,7 +9,7 @@ class FirebaseDatabase implements BaseDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Entry?> getEntryInStore(String storeId, String entryId) async {
+  Future<Entry> getEntryInStore(String storeId, String entryId) async {
     DocumentSnapshot<Map<String, dynamic>> entryDoc =
         await firestore.collection(entriesKey).doc(entryId).get();
 
@@ -23,13 +23,13 @@ class FirebaseDatabase implements BaseDatabase {
   }
 
   @override
-  Future<List<Entry>> getEntries(String storeId) async {
+  Future<List<Entry>> getEntriesInStore(String storeId) async {
     Store store = await getStore(storeId);
     return store.getEntries();
   }
 
   @override
-  Future<void> setEntries(String storeId, List<Entry> entries) {
+  Future<void> setStoreEntries(String storeId, List<Entry> entries) {
     throw UnimplementedError(
         "This will not be used in Firebase implementation");
   }
@@ -45,8 +45,21 @@ class FirebaseDatabase implements BaseDatabase {
   }
 
   @override
-  Future<void> addStore() async {
-    
+  Future<void> addStore(Store store) async {
+    try {
+      await firestore.collection(storesKey).doc(store.id).set(store.toJson());
+    } catch (e) {
+      throw Exception("Unable to add store: $e");
+    }
+  }
+
+  @override
+  Future<void> removeStore(String storeId) async {
+    try {
+      await firestore.collection(storesKey).doc(storeId).delete();
+    } catch (e) {
+      throw Exception("Unable to remove store: $e");
+    }
   }
 
   @override
@@ -73,11 +86,6 @@ class FirebaseDatabase implements BaseDatabase {
   }
 
   @override
-  Future<void> setStores(List<Store> stores) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> updateEntryTitle(
       String storeId, String entryId, String title) async {
     DocumentReference entryRef = firestore.collection(entriesKey).doc(entryId);
@@ -85,7 +93,7 @@ class FirebaseDatabase implements BaseDatabase {
   }
 
   @override
-  Future<void> updateEntry(String storeId, Entry entry) async {
+  Future<void> updateEntryInStore(String storeId, Entry entry) async {
     DocumentReference entryRef = firestore.collection(entriesKey).doc(entry.id);
     await entryRef.update(entry.toJson());
   }

@@ -2,13 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/storage_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-class Database implements BaseDatabase {
+class Database {
   Map<String, Store> stores;
 
   Database(this.stores);
@@ -61,52 +60,44 @@ class Database implements BaseDatabase {
     return json.encode(toJson());
   }
 
-  @override
   Future<Entry?> getEntryInStore(String storeId, String entryId) {
     Store store = stores['storeId'] as Store;
     Entry entry = store.getEntry(entryId);
     return Future.value(entry);
   }
 
-  @override
-  Future<List<Entry>> getEntries(String storeId) {
+  Future<List<Entry>> getEntriesInStore(String storeId) {
     Store store = stores[storeId] as Store;
     return Future.value(store.entries.values.toList());
   }
 
-  @override
-  Future<void> setEntries(String storeId, List<Entry> entries) {
+  Future<void> setStoreEntries(String storeId, List<Entry> entries) {
     Store store = stores[storeId] as Store;
     store.entries =
         Map.fromEntries(entries.map((entry) => MapEntry(entry.id, entry)));
     return Future.value(null);
   }
 
-  @override
   Future<List<Store>> getStores() {
     return Future.value(stores.values.toList());
   }
 
-  @override
   Future<void> addEntryToStore(String storeId, Entry entry) async {
     Store store = await getStore(storeId);
     store.addEntry(entry);
     return Future.value(null);
   }
 
-  @override
   Future<void> setStores(List<Store> myStores) {
     stores =
         Map.fromEntries(myStores.map((store) => MapEntry(store.id, store)));
     return Future.value(null);
   }
 
-  @override
   Future<Store> getStore(String storeId) {
     return Future.value(stores[storeId] as Store);
   }
 
-  @override
   Future<void> updateEntryTitle(
       String storeId, String entryId, String entryTitle) async {
     Store store = await getStore(storeId);
@@ -115,7 +106,6 @@ class Database implements BaseDatabase {
     return Future.value(null);
   }
 
-  @override
   Future<void> updateStoreTitle(String storeId, String title) async {
     Store store = await getStore(storeId);
     store.title = title;
@@ -128,6 +118,7 @@ class Store {
   final DateTime created;
   DateTime lastChanged;
   String title;
+
   Map<String, Entry> entries;
 
   Store(this.id, this.created, this.lastChanged, this.title, this.entries);

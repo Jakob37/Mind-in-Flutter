@@ -5,7 +5,7 @@ import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:mind_flutter/src/views/entry_view.dart';
 import 'package:shared_flutter_code/shared_flutter_code.dart';
 
-import '../db/database.dart';
+import '../db/_database.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
@@ -33,12 +33,18 @@ class EntriesViewState extends State<EntriesView> {
   List<Entry> entries = [];
 
   @override
-  void didChangeDependencies() async {
-    List<Entry> myEntries = await widget.loadEntries();
-    setState(() {
-      entries = myEntries;
-    });
+  void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadEntries();
+  }
+
+  Future<void> _loadEntries() async {
+    List<Entry> myEntries = await widget.loadEntries();
+    if (mounted) {
+      setState(() {
+        entries = myEntries;
+      });
+    }
   }
 
   @override
@@ -70,6 +76,7 @@ class EntriesViewState extends State<EntriesView> {
 
     onDismissRight() async {
       String? storeId = await _showTransferModal(context);
+
       if (storeId != null) {
         int index = entries.indexOf(entry);
         Entry removedEntry = await _removeEntry(index);
@@ -108,11 +115,22 @@ class EntriesViewState extends State<EntriesView> {
 
   Future<String?> _showTransferModal(BuildContext context) async {
     List<Store> stores = await widget.loadStores();
+
+    if (!mounted) {
+      return null;
+    }
+
     List<Option> options = stores
         .map((store) => Option(id: store.id, displayText: store.title))
         .toList();
 
-    final result = await showDialog<String?>(
+    String? result = await _showSelectModal(options);
+
+    return result;
+  }
+
+  Future<String?> _showSelectModal(List<Option> options) {
+    return showDialog<String?>(
       context: context,
       builder: (BuildContext context) => SelectModal(
           onSubmitted: (confirmed) {
@@ -120,8 +138,6 @@ class EntriesViewState extends State<EntriesView> {
           },
           options: options),
     );
-
-    return result;
   }
 
   void _addNewItem(String title) async {
