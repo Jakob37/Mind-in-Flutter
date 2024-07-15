@@ -99,11 +99,9 @@ class StoreViewState extends State<StoreView> {
     return entryCard(entry, () {
       Navigator.pushNamed(context, EntryView.routeName, arguments: args);
     }, () {
-      // logger.w("Removal not implemented");
       int index = displayEntries.indexOf(entry);
       _removeItem(index);
     }, () {
-      // logger.w("Removal not implemented");
       int index = displayEntries.indexOf(entry);
       _removeItem(index);
     });

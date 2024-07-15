@@ -10,7 +10,7 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 const String dbFilename = "db.txt";
 
-Widget appTabsView(BaseDatabase db) {
+Widget appMainView(BaseDatabase db) {
   // final String? itemsJson = await StorageHelper.readData(widget.fileName);
   // var db = Database.fromJson(json)
 
@@ -50,8 +50,6 @@ Widget appTabsView(BaseDatabase db) {
                 db.removeStore(storeId);
               },
               assignEntries: (String storeId, List<Entry> entries) {
-                logger.w(
-                    "storeId $storeId entries ${entries.map((entry) => entry.toJsonString())}");
                 db.setStoreEntries(storeId, entries);
               },
               assignTitle: (String storeId, String title) {

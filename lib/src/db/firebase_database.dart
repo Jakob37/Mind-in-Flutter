@@ -3,7 +3,7 @@ import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/_database.dart';
 
 const storesKey = 'stores';
-const entriesKey = 'entries';
+// const entriesKey = 'entries';
 const scratchStoreId = 'scratch';
 
 class FirebaseDatabase implements BaseDatabase {
@@ -30,13 +30,14 @@ class FirebaseDatabase implements BaseDatabase {
 
   @override
   Future<Entry> getEntryInStore(String storeId, String entryId) async {
-    DocumentSnapshot<Map<String, dynamic>> entryDoc =
-        await firestore.collection(entriesKey).doc(entryId).get();
+    DocumentSnapshot<Map<String, dynamic>> storeDoc =
+        await firestore.collection(storesKey).doc(storeId).get();
 
-    if (entryDoc.exists) {
-      Map<String, dynamic>? data = entryDoc.data();
+    if (storeDoc.exists) {
+      Map<String, dynamic>? data = storeDoc.data();
       if (data != null) {
-        return Entry.fromJson(data);
+        Store store = Store.fromJson(data);
+        return store.getEntry(entryId);
       }
     }
     throw ArgumentError("No entry found for entryId $entryId");
@@ -49,9 +50,14 @@ class FirebaseDatabase implements BaseDatabase {
   }
 
   @override
-  Future<void> setStoreEntries(String storeId, List<Entry> entries) {
-    throw UnimplementedError(
-        "This will not be used in Firebase implementation");
+  Future<void> setStoreEntries(String storeId, List<Entry> entries) async {
+    Store store = await getStore(storeId);
+    // store.entries = entries;
+    Map<String, Entry> entriesMap = {
+      for (var entry in entries) entry.id: entry
+    };
+    store.entries = entriesMap;
+    saveStore(store);
   }
 
   @override
@@ -59,9 +65,11 @@ class FirebaseDatabase implements BaseDatabase {
     QuerySnapshot<Map<String, dynamic>> storesQuerySnapshot =
         await firestore.collection(storesKey).get();
 
-    return storesQuerySnapshot.docs.map((doc) {
+    List<Store> stores = storesQuerySnapshot.docs.map((doc) {
       return Store.fromJson(doc.data());
     }).toList();
+
+    return stores;
   }
 
   @override
@@ -102,24 +110,39 @@ class FirebaseDatabase implements BaseDatabase {
 
   @override
   Future<void> addEntryToStore(String storeId, Entry entry) async {
-    firestore.collection(entriesKey).doc(entry.id).set(entry.toJson());
+    Store store = await getStore(storeId);
+    store.addEntry(entry);
+    // firestore.collection(storesKey).doc(storeId).set(entry.toJson());
+    saveStore(store);
   }
 
   @override
   Future<void> updateEntryTitle(
       String storeId, String entryId, String title) async {
-    DocumentReference entryRef = firestore.collection(entriesKey).doc(entryId);
-    await entryRef.update({"title": title});
+    Store store = await getStore(storeId);
+    Entry entry = store.getEntry(entryId);
+    entry.title = title;
+    saveStore(store);
   }
 
   @override
-  Future<void> updateEntryInStore(String storeId, Entry entry) async {
-    DocumentReference entryRef = firestore.collection(entriesKey).doc(entry.id);
-    await entryRef.update(entry.toJson());
+  Future<void> updateEntryInStore(
+      String storeId, String entryId, String title, String content) async {
+    Store store = await getStore(storeId);
+    Entry entryRef = store.getEntry(entryId);
+    entryRef.title = title;
+    entryRef.content = content;
+    saveStore(store);
   }
 
   @override
-  Future<void> updateStoreTitle(String storeId, String title) {
-    throw UnimplementedError();
+  Future<void> updateStoreTitle(String storeId, String title) async {
+    Store store = await getStore(storeId);
+    store.title = title;
+    saveStore(store);
+  }
+
+  Future<void> saveStore(Store store) async {
+    firestore.collection(storesKey).doc(store.id).set(store.toJson());
   }
 }

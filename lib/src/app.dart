@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
-import 'package:mind_flutter/src/views/tab_view.dart';
+import 'package:mind_flutter/src/views/main_view.dart';
 
 import 'views/entry_view.dart';
 import 'views/entries_view.dart';
@@ -68,7 +68,7 @@ class MindApp extends StatelessWidget {
                     return const StoreView();
                   case EntriesView.routeName:
                   default:
-                    return appTabsView(db);
+                    return appMainView(db);
                 }
               },
             );

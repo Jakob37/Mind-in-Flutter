@@ -41,9 +41,9 @@ class StoresViewState extends State<StoresView> {
   }
 
   _loadStores() async {
-    List<Store> stores = await widget.loadStores();
+    List<Store> locStores = await widget.loadStores();
     setState(() {
-      stores = stores;
+      stores = locStores;
     });
   }
 
@@ -67,7 +67,6 @@ class StoresViewState extends State<StoresView> {
 
       void assignTitle(String title) => widget.assignTitle(store.id, title);
       void assignEntries(List<Entry> entries) {
-        logger.w("assign entries in stores_view");
         widget.assignEntries(store.id, entries);
       }
 
