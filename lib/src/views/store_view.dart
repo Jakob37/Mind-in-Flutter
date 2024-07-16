@@ -10,11 +10,9 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class StoreViewArguments {
   final Store store;
-  final Function() refreshParent;
   final Function(String) assignTitle;
   final Function(List<Entry>) assignEntries;
-  StoreViewArguments(
-      this.store, this.refreshParent, this.assignTitle, this.assignEntries);
+  StoreViewArguments(this.store, this.assignTitle, this.assignEntries);
 }
 
 class StoreView extends StatefulWidget {
@@ -31,7 +29,6 @@ class StoreViewState extends State<StoreView> {
   late TextEditingController _titleController;
   late Store store;
   late List<Entry> displayEntries;
-  late Function() refreshParent;
   late Function(String) assignTitle;
   late Function(List<Entry>) assignEntries;
 
@@ -48,7 +45,6 @@ class StoreViewState extends State<StoreView> {
         ModalRoute.of(context)!.settings.arguments as StoreViewArguments;
     store = args.store;
     displayEntries = store.getEntries();
-    refreshParent = args.refreshParent;
     assignTitle = args.assignTitle;
     assignEntries = args.assignEntries;
     _titleController.text = store.title;
@@ -80,7 +76,6 @@ class StoreViewState extends State<StoreView> {
                 store.title = newTitle;
               });
               assignTitle(newTitle);
-              refreshParent();
             }),
       ),
       body: SafeArea(child: Column(children: [Expanded(child: getList())])),
@@ -92,9 +87,19 @@ class StoreViewState extends State<StoreView> {
   }
 
   Widget _buildItem(BuildContext context, Entry entry) {
-    EntryViewArguments args = EntryViewArguments(entry, () {
-      setState(() {});
-    });
+    void assignTitle(String title) {
+      // logger.e("Not implemented");
+      entry.title = title;
+      assignEntries(displayEntries);
+    }
+
+    void assignContent(String content) {
+      entry.content = content;
+      assignEntries(displayEntries);
+    }
+
+    EntryViewArguments args =
+        EntryViewArguments(entry, assignTitle, assignContent);
 
     return entryCard(entry, () {
       Navigator.pushNamed(context, EntryView.routeName, arguments: args);

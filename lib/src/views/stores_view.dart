@@ -64,9 +64,11 @@ class StoresViewState extends State<StoresView> {
 
   Widget _buildStore(BuildContext context, Store store) {
     return storeCard(context, store, () {
-      void refreshParent() => setState(() {});
+      void assignTitle(String title) {
+        widget.assignTitle(store.id, title);
+        setState(() {});
+      }
 
-      void assignTitle(String title) => widget.assignTitle(store.id, title);
       void assignEntries(List<Entry> entries) async {
         await widget.assignEntries(store.id, entries);
         // setState(() {});
@@ -74,8 +76,7 @@ class StoresViewState extends State<StoresView> {
       }
 
       Navigator.pushNamed(context, StoreView.routeName,
-          arguments: StoreViewArguments(
-              store, refreshParent, assignTitle, assignEntries));
+          arguments: StoreViewArguments(store, assignTitle, assignEntries));
     }, () {
       _showConfirmModal(context, () {
         _removeStore(stores.indexOf(store));

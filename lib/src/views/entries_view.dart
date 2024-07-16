@@ -53,7 +53,7 @@ class EntriesViewState extends State<EntriesView> {
       return ReorderableListView(
         onReorder: _onReorder,
         children: [
-          ...entries.map((item) => _buildItem(context, item)),
+          ...entries.map((item) => _buildEntryCard(context, item)),
         ],
       );
     }
@@ -64,10 +64,17 @@ class EntriesViewState extends State<EntriesView> {
             sharedBottomButton("Add entry", () => _showModal(context)));
   }
 
-  Widget _buildItem(BuildContext context, Entry entry) {
-    EntryViewArguments args = EntryViewArguments(entry, () {
+  Widget _buildEntryCard(BuildContext context, Entry entry) {
+    void assignTitle(String title) {
       setState(() {});
-    });
+    }
+
+    void assignContent(String content) {
+      setState(() {});
+    }
+
+    EntryViewArguments args =
+        EntryViewArguments(entry, assignTitle, assignContent);
 
     onDismissLeft() {
       int index = entries.indexOf(entry);

@@ -54,16 +54,12 @@ class MindApp extends StatelessWidget {
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
+                logger.w("Hitting switch with name ${routeSettings.name}");
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
                   case EntryView.routeName:
-                    return EntryView(
-                      assignTitleInScratch: (String entryId, String title) {
-                        db.updateEntryTitle(scratchStoreId, entryId, title);
-                        // writeDb(db, verbose: true);
-                      },
-                    );
+                    return const EntryView();
                   case StoreView.routeName:
                     return const StoreView();
                   case EntriesView.routeName:

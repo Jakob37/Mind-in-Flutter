@@ -7,13 +7,14 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 class EntryViewArguments {
   final Entry entry;
-  final Function() refreshParent;
-  EntryViewArguments(this.entry, this.refreshParent);
+  final Function(String) assignTitle;
+  final Function(String) assignContent;
+  EntryViewArguments(this.entry, this.assignTitle, this.assignContent);
 }
 
 class EntryView extends StatefulWidget {
-  final void Function(String, String) assignTitleInScratch;
-  const EntryView({super.key, required this.assignTitleInScratch});
+  // final void Function(String, String) assignTitle;
+  const EntryView({super.key});
   static const routeName = '/sample_item';
 
   @override
@@ -22,15 +23,18 @@ class EntryView extends StatefulWidget {
 
 class EntryViewState extends State<EntryView> {
   // late TextEditingController _titleController;
-  late TextEditingController _contentController;
+  // late TextEditingController _contentController;
   late Entry entry;
   late Function() refreshParent;
+
+  late Function(String) assignTitle;
+  late Function(String) assignContent;
 
   @override
   void initState() {
     super.initState();
     // _titleController = TextEditingController();
-    _contentController = TextEditingController();
+    // _contentController = TextEditingController();
   }
 
   @override
@@ -39,15 +43,17 @@ class EntryViewState extends State<EntryView> {
     final EntryViewArguments args =
         ModalRoute.of(context)!.settings.arguments as EntryViewArguments;
     entry = args.entry;
-    refreshParent = args.refreshParent;
+    assignTitle = args.assignTitle;
+    assignContent = args.assignContent;
+    // refreshParent = args.refreshParent;
     // _titleController.text = entry.title;
-    _contentController.text = entry.content;
+    // _contentController.text = entry.content;
   }
 
   @override
   void dispose() {
     // _titleController.dispose();
-    _contentController.dispose();
+    // _contentController.dispose();
     super.dispose();
   }
 
@@ -61,8 +67,7 @@ class EntryViewState extends State<EntryView> {
               setState(() {
                 entry.title = newTitle;
               });
-              widget.assignTitleInScratch(entry.id, newTitle);
-              refreshParent();
+              assignTitle(newTitle);
             }),
       ),
       body: Padding(
@@ -74,12 +79,14 @@ class EntryViewState extends State<EntryView> {
                   style: const TextStyle(fontSize: 14))),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Content:", style: TextStyle(fontSize: 18)),
-                  IconButton(icon: const Icon(Icons.edit), onPressed: () {})
-                ]),
+            child: EditText(
+                text: entry.content,
+                onChange: (String newContent) {
+                  setState(() {
+                    entry.content = newContent;
+                  });
+                  assignContent(newContent);
+                }),
           ),
           // Text("Content:", style: const TextStyle(fontSize: 18))),
           Padding(
