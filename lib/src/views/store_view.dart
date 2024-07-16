@@ -110,7 +110,7 @@ class StoreViewState extends State<StoreView> {
   void _removeItem(int index) async {
     displayEntries.removeAt(index);
     setState(() {});
-    assignEntries(displayEntries);
+    await assignEntries(displayEntries);
   }
 
   void _showModal(BuildContext context) {
@@ -125,15 +125,14 @@ class StoreViewState extends State<StoreView> {
             ));
   }
 
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final Entry item = displayEntries.removeAt(oldIndex);
-      displayEntries.insert(newIndex, item);
-      assignEntries(displayEntries);
-    });
+  void _onReorder(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final Entry item = displayEntries.removeAt(oldIndex);
+    displayEntries.insert(newIndex, item);
+    setState(() {});
+    await assignEntries(displayEntries);
   }
 
   // FIXME: Do this better

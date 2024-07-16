@@ -49,8 +49,8 @@ Widget appMainView(BaseDatabase db) {
               removeStore: (String storeId) {
                 db.removeStore(storeId);
               },
-              assignEntries: (String storeId, List<Entry> entries) {
-                db.setStoreEntries(storeId, entries);
+              assignEntries: (String storeId, List<Entry> entries) async {
+                await db.setStoreEntries(storeId, entries);
               },
               assignTitle: (String storeId, String title) {
                 db.updateStoreTitle(storeId, title);

@@ -51,13 +51,15 @@ class FirebaseDatabase implements BaseDatabase {
 
   @override
   Future<void> setStoreEntries(String storeId, List<Entry> entries) async {
+    logger.w("setStoreEntries called, ${entries.length} entries");
+
     Store store = await getStore(storeId);
     // store.entries = entries;
     Map<String, Entry> entriesMap = {
       for (var entry in entries) entry.id: entry
     };
     store.entries = entriesMap;
-    saveStore(store);
+    await saveStore(store);
   }
 
   @override

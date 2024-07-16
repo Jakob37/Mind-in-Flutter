@@ -13,7 +13,8 @@ class StoresView extends StatefulWidget {
   final Future<List<Store>> Function() loadStores;
   final void Function(Store) addStore;
   final void Function(String) removeStore;
-  final void Function(String storeId, List<Entry> entries) assignEntries;
+  final Future<void> Function(String storeId, List<Entry> entries)
+      assignEntries;
   final void Function(String storeId, String title) assignTitle;
 
   const StoresView(
@@ -66,8 +67,10 @@ class StoresViewState extends State<StoresView> {
       void refreshParent() => setState(() {});
 
       void assignTitle(String title) => widget.assignTitle(store.id, title);
-      void assignEntries(List<Entry> entries) {
-        widget.assignEntries(store.id, entries);
+      void assignEntries(List<Entry> entries) async {
+        await widget.assignEntries(store.id, entries);
+        // setState(() {});
+        _loadStores();
       }
 
       Navigator.pushNamed(context, StoreView.routeName,
