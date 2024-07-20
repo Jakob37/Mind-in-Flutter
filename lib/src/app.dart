@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/main_view.dart';
@@ -54,7 +53,6 @@ class MindApp extends StatelessWidget {
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
-                logger.w("Hitting switch with name ${routeSettings.name}");
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
@@ -64,7 +62,7 @@ class MindApp extends StatelessWidget {
                     return const StoreView();
                   case EntriesView.routeName:
                   default:
-                    return appMainView(db);
+                    return appMainView(db, settingsController);
                 }
               },
             );

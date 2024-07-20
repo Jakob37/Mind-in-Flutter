@@ -27,37 +27,5 @@ void main() async {
   BaseDatabase db = FirebaseDatabase();
   await db.ensureSetup();
 
-  // await ensureScratchStoreExists(db);
-
   runApp(MindApp(db: db, settingsController: settingsController));
 }
-
-// Future<void> ensureScratchStoreExists(BaseDatabase db) async {
-//   try {
-//     Store scratchStore = await db.getStore('scratch');
-//     logger.i("Scratch store exists");
-//   } catch (e) {
-//     logger.i("Scratch store does not exist. Creating ...");
-//     Store scratchStore = getStore('Store');
-//     await db.
-//   }
-// }
-
-// Future<Database> setupDatabase(String dbFileName) async {
-//   if (!await StorageHelper.fileExists(dbFileName)) {
-//     logger.i("File not found, creating a new file at $dbFileName (in doc dir)");
-//     // await file.create(recursive: true);
-
-//     final defaultDb = makeEmptyDb();
-//     StorageHelper.writeData(defaultDb.toJsonString(), dbFileName);
-//   }
-
-//   return await Database.init(dbFileName);
-// }
-
-// // FIXME: Many things to think through here
-// Database makeEmptyDb() {
-//   Store scratch =
-//       Store(scratchStoreId, DateTime.now(), DateTime.now(), 'Scratch', {});
-//   return Database({scratchStoreId: scratch});
-// }
