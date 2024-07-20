@@ -7,6 +7,7 @@ import 'package:mind_flutter/src/settings/settings_controller.dart';
 import 'package:mind_flutter/src/settings/settings_view.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
 import 'package:mind_flutter/src/views/goals_view.dart';
+import 'package:mind_flutter/src/views/log_view.dart';
 import 'package:mind_flutter/src/views/placeholder_view.dart';
 import 'package:mind_flutter/src/views/stores_view.dart';
 
@@ -63,7 +64,7 @@ Widget appMainView(BaseDatabase db, SettingsController controller) {
                 db.updateStoreTitle(storeId, title);
               }),
           const GoalsView(),
-          const PlaceholderView(),
+          const LogView(),
           SettingsView(controller: controller),
         ]),
       ));
