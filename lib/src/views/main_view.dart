@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
-import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 import 'package:mind_flutter/src/settings/settings_controller.dart';
 import 'package:mind_flutter/src/settings/settings_view.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
 import 'package:mind_flutter/src/views/goals_view.dart';
 import 'package:mind_flutter/src/views/log_view.dart';
-import 'package:mind_flutter/src/views/placeholder_view.dart';
-import 'package:mind_flutter/src/views/stores_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 

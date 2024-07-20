@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_flutter/src/config.dart';
-import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 
 Widget storeCard(BuildContext context, Store store, Function() onPressed,
     Function() onIconPressed) {

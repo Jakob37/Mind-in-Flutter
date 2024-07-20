@@ -1,6 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/config.dart';
 import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 import 'package:mind_flutter/src/db/storage_helper.dart';
 import 'package:mind_flutter/src/util/util.dart';
 

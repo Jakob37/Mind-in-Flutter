@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 import 'package:mind_flutter/src/util/util.dart';
 
 Widget entryCard(Entry entry, Function() onTap, Function() onDismissLeft,

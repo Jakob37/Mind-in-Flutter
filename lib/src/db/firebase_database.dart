@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 
 const storesKey = 'stores';
 // const entriesKey = 'entries';

@@ -1,4 +1,4 @@
-import 'package:mind_flutter/src/db/_database.dart';
+import 'package:mind_flutter/src/db/entities.dart';
 
 abstract class BaseDatabase {
   Future<void> ensureSetup();

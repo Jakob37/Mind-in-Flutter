@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
-import 'package:mind_flutter/src/db/_database.dart';
-import 'package:mind_flutter/src/util/dbutil.dart';
+import 'package:mind_flutter/src/db/entities.dart';
+import 'package:mind_flutter/src/db/dbutil.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
