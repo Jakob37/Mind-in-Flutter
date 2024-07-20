@@ -15,57 +15,97 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 const String dbFilename = "db.txt";
 
-Widget appMainView(BaseDatabase db, SettingsController controller) {
-  // final String? itemsJson = await StorageHelper.readData(widget.fileName);
-  // var db = Database.fromJson(json)
+class AbstractViewData {
+  final Icon tabIcon;
+  final Widget view;
 
-  return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: SafeArea(
-              child: TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.home)),
-                  Tab(icon: Icon(Icons.folder)),
-                  Tab(icon: Icon(Icons.flag)),
-                  Tab(icon: Icon(Icons.timer)),
-                  Tab(icon: Icon(Icons.settings)),
-                ],
-                labelColor: Colors.white,
-              ),
-            )),
-        body: TabBarView(children: [
+  AbstractViewData(this.tabIcon, this.view);
+}
+
+class EntriesViewData extends AbstractViewData {
+  EntriesViewData(BaseDatabase db)
+      : super(
+          const Icon(Icons.home),
           EntriesView(
             loadEntries: () => db.getEntriesInStore(scratchStoreId),
             assignEntries: (List<Entry> entries) {
               db.setStoreEntries(scratchStoreId, entries);
-              // writeDb(db);
             },
             loadStores: () => db.getStores(),
             addEntryToStore: (String storeId, Entry entry) {
               db.addEntryToStore(storeId, entry);
-              // writeDb(db);
             },
           ),
-          StoresView(
-              loadStores: () => db.getStores(),
-              addStore: (Store store) {
-                db.addStore(store);
-              },
-              removeStore: (String storeId) {
-                db.removeStore(storeId);
-              },
-              assignEntries: (String storeId, List<Entry> entries) async {
-                await db.setStoreEntries(storeId, entries);
-              },
-              assignTitle: (String storeId, String title) {
-                db.updateStoreTitle(storeId, title);
-              }),
+        );
+}
+
+class StoresViewData extends AbstractViewData {
+  StoresViewData(BaseDatabase db)
+      : super(
+          const Icon(Icons.folder),
+          EntriesView(
+            loadEntries: () => db.getEntriesInStore(scratchStoreId),
+            assignEntries: (List<Entry> entries) {
+              db.setStoreEntries(scratchStoreId, entries);
+            },
+            loadStores: () => db.getStores(),
+            addEntryToStore: (String storeId, Entry entry) {
+              db.addEntryToStore(storeId, entry);
+            },
+          ),
+        );
+}
+
+class GoalsViewData extends AbstractViewData {
+  GoalsViewData()
+      : super(
+          const Icon(Icons.flag),
           const GoalsView(),
+        );
+}
+
+class LogViewData extends AbstractViewData {
+  LogViewData()
+      : super(
+          const Icon(Icons.history),
           const LogView(),
-          SettingsView(controller: controller),
-        ]),
+        );
+}
+
+class SettingsViewData extends AbstractViewData {
+  SettingsViewData(SettingsController settingsController)
+      : super(
+          const Icon(Icons.settings),
+          SettingsView(controller: settingsController),
+        );
+}
+
+Widget appMainView(BaseDatabase db, SettingsController settingsController) {
+  AbstractViewData entriesView = EntriesViewData(db);
+  AbstractViewData storesView = StoresViewData(db);
+  AbstractViewData goalsView = GoalsViewData();
+  AbstractViewData logView = LogViewData();
+  AbstractViewData settingsView = SettingsViewData(settingsController);
+
+  List<AbstractViewData> views = [
+    entriesView,
+    storesView,
+    goalsView,
+    logView,
+    settingsView
+  ];
+
+  return DefaultTabController(
+      length: views.length,
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: SafeArea(
+              child: TabBar(
+                tabs: views.map((view) => Tab(icon: view.tabIcon)).toList(),
+                labelColor: Colors.white,
+              ),
+            )),
+        body: TabBarView(children: views.map((view) => view.view).toList()),
       ));
 }
