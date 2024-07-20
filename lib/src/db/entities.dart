@@ -1,5 +1,16 @@
 import 'dart:convert';
 
+// abstract class DbEntity {
+//   final String id;
+//   final DateTime created;
+
+//   Map<String, dynamic> toJson();
+  
+  
+
+//   DbEntity(this.id, this.created)
+// }
+
 class Store {
   final String id;
   final DateTime created;
@@ -95,4 +106,15 @@ class Entry {
         json['title'] as String,
         json['content'] as String,
       );
+}
+
+class JournalLog {
+  final String id;
+  final DateTime created;
+  DateTime lastChanged;
+  String title;
+  List<Entry> entries;
+  int? durationMs;
+
+  JournalLog(this.id, this.created, this.lastChanged, this.title, this.entries);
 }
