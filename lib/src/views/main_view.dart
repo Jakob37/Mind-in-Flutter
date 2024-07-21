@@ -5,9 +5,9 @@ import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/entities.dart';
 import 'package:mind_flutter/src/settings/settings_controller.dart';
 import 'package:mind_flutter/src/settings/settings_view.dart';
-import 'package:mind_flutter/src/views/entries_view.dart';
+import 'package:mind_flutter/src/views/scratch_view.dart';
 import 'package:mind_flutter/src/views/goals_view.dart';
-import 'package:mind_flutter/src/views/log_view.dart';
+import 'package:mind_flutter/src/views/journal_view.dart';
 import 'package:mind_flutter/src/views/stores_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -25,7 +25,7 @@ class EntriesViewData extends AbstractViewData {
   EntriesViewData(BaseDatabase db)
       : super(
           const Icon(Icons.home),
-          EntriesView(
+          ScratchView(
             loadEntries: () => db.getEntriesInStore(scratchStoreId),
             assignEntries: (List<Entry> entries) {
               db.setStoreEntries(scratchStoreId, entries);
@@ -67,12 +67,14 @@ class GoalsViewData extends AbstractViewData {
         );
 }
 
-class LogViewData extends AbstractViewData {
-  LogViewData()
+class JournalViewData extends AbstractViewData {
+  JournalViewData()
       : super(
-          const Icon(Icons.history),
-          const LogView(),
-        );
+            const Icon(Icons.edit),
+            JournalView(
+                loadEntries: () => Future.value([]),
+                addEntry: (Entry entry) => {},
+                removeEntry: (String entryId) => {}));
 }
 
 class SettingsViewData extends AbstractViewData {
@@ -86,15 +88,15 @@ class SettingsViewData extends AbstractViewData {
 Widget appMainView(BaseDatabase db, SettingsController settingsController) {
   AbstractViewData entriesView = EntriesViewData(db);
   AbstractViewData storesView = StoresViewData(db);
-  AbstractViewData goalsView = GoalsViewData();
-  AbstractViewData logView = LogViewData();
+  // AbstractViewData goalsView = GoalsViewData();
+  AbstractViewData logView = JournalViewData();
   AbstractViewData settingsView = SettingsViewData(settingsController);
 
   List<AbstractViewData> views = [
     entriesView,
-    storesView,
-    goalsView,
+    // goalsView,
     logView,
+    storesView,
     settingsView
   ];
 

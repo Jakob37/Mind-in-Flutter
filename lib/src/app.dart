@@ -7,7 +7,7 @@ import 'package:mind_flutter/src/views/store_view.dart';
 import 'package:mind_flutter/src/views/main_view.dart';
 
 import 'views/entry_view.dart';
-import 'views/entries_view.dart';
+import 'views/scratch_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -60,7 +60,7 @@ class MindApp extends StatelessWidget {
                     return const EntryView();
                   case StoreView.routeName:
                     return const StoreView();
-                  case EntriesView.routeName:
+                  case ScratchView.routeName:
                   default:
                     return appMainView(db, settingsController);
                 }

@@ -9,13 +9,13 @@ import 'package:mind_flutter/src/db/entities.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
-class EntriesView extends StatefulWidget {
+class ScratchView extends StatefulWidget {
   final Future<List<Entry>> Function() loadEntries;
   final Future<List<Store>> Function() loadStores;
   final void Function(List<Entry>) assignEntries;
   final void Function(String storeId, Entry entry) addEntryToStore;
 
-  const EntriesView(
+  const ScratchView(
       {super.key,
       required this.loadEntries,
       required this.assignEntries,
@@ -26,10 +26,10 @@ class EntriesView extends StatefulWidget {
   static const routeName = '/';
 
   @override
-  EntriesViewState createState() => EntriesViewState();
+  ScratchViewState createState() => ScratchViewState();
 }
 
-class EntriesViewState extends State<EntriesView> {
+class ScratchViewState extends State<ScratchView> {
   List<Entry> entries = [];
 
   @override
