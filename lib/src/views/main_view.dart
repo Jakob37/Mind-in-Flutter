@@ -8,6 +8,7 @@ import 'package:mind_flutter/src/settings/settings_view.dart';
 import 'package:mind_flutter/src/views/entries_view.dart';
 import 'package:mind_flutter/src/views/goals_view.dart';
 import 'package:mind_flutter/src/views/log_view.dart';
+import 'package:mind_flutter/src/views/stores_view.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
 
@@ -41,16 +42,20 @@ class StoresViewData extends AbstractViewData {
   StoresViewData(BaseDatabase db)
       : super(
           const Icon(Icons.folder),
-          EntriesView(
-            loadEntries: () => db.getEntriesInStore(scratchStoreId),
-            assignEntries: (List<Entry> entries) {
-              db.setStoreEntries(scratchStoreId, entries);
-            },
-            loadStores: () => db.getStores(),
-            addEntryToStore: (String storeId, Entry entry) {
-              db.addEntryToStore(storeId, entry);
-            },
-          ),
+          StoresView(
+              loadStores: () => db.getStores(),
+              addStore: (Store store) {
+                db.addStore(store);
+              },
+              removeStore: (String storeId) {
+                db.removeStore(storeId);
+              },
+              assignEntries: (String storeId, List<Entry> entries) async {
+                await db.setStoreEntries(storeId, entries);
+              },
+              assignTitle: (String storeId, String title) {
+                db.updateStoreTitle(storeId, title);
+              }),
         );
 }
 

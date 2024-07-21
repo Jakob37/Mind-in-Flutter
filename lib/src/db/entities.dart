@@ -5,8 +5,6 @@ import 'dart:convert';
 //   final DateTime created;
 
 //   Map<String, dynamic> toJson();
-  
-  
 
 //   DbEntity(this.id, this.created)
 // }
@@ -70,12 +68,6 @@ class Store {
     Entry entry = entries[index];
     return entry;
   }
-
-  // Entry removeEntryAtIndex(int index) {
-  //   // Entry entry = getEntryAtIndex(index);
-  //   // entries.remove(entry.id);
-  //   // return entry;
-  // }
 }
 
 class Entry {
@@ -85,36 +77,47 @@ class Entry {
   String title;
   String content;
 
-  Entry(this.id, this.created, this.lastChanged, this.title, this.content);
+  Map<String, String>? customAttributes;
+
+  Entry(this.id, this.created, this.lastChanged, this.title, this.content,
+      [this.customAttributes]);
 
   String toJsonString() {
     return json.encode(toJson());
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id.toString(),
-        'created': created.toIso8601String(),
-        'lastChanged': lastChanged.toIso8601String(),
-        'title': title,
-        'content': content,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> obj = {
+      'id': id.toString(),
+      'created': created.toIso8601String(),
+      'lastChanged': lastChanged.toIso8601String(),
+      'title': title,
+      'content': content,
+    };
+    if (customAttributes != null) {
+      obj['customAttributes'] = customAttributes;
+    }
+    return obj;
+  }
 
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
-        json['id'] as String,
-        DateTime.parse(json['created']),
-        DateTime.parse(json['lastChanged']),
-        json['title'] as String,
-        json['content'] as String,
-      );
+      json['id'] as String,
+      DateTime.parse(json['created']),
+      DateTime.parse(json['lastChanged']),
+      json['title'] as String,
+      json['content'] as String,
+      json['customAttributes'] != null
+          ? Map<String, String>.from(json['customAttributes'])
+          : null);
 }
 
-class JournalLog {
-  final String id;
-  final DateTime created;
-  DateTime lastChanged;
-  String title;
-  List<Entry> entries;
-  int? durationMs;
+// class JournalLog {
+//   final String id;
+//   final DateTime created;
+//   DateTime lastChanged;
+//   String title;
+//   List<Entry> entries;
+//   int? durationMs;
 
-  JournalLog(this.id, this.created, this.lastChanged, this.title, this.entries);
-}
+//   JournalLog(this.id, this.created, this.lastChanged, this.title, this.entries);
+// }
