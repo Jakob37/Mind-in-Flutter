@@ -7,7 +7,7 @@ const storesKey = 'stores';
 // const entriesKey = 'entries';
 const scratchStoreId = 'scratch';
 
-class FirebaseDatabase implements BaseDatabase {
+class FirebaseDatabase implements DB {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override

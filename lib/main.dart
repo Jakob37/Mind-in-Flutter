@@ -24,7 +24,7 @@ void main() async {
           projectId: firebaseProjectId,
           storageBucket: firebaseStorageBucket));
   logger.i("Firebase initialized!");
-  BaseDatabase db = FirebaseDatabase();
+  DB db = FirebaseDatabase();
   await db.ensureSetup();
 
   runApp(MindApp(db: db, settingsController: settingsController));

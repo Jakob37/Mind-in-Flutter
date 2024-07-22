@@ -15,7 +15,7 @@ Logger logger = Logger(printer: PrettyPrinter());
 
 /// The Widget that configures your application.
 class MindApp extends StatelessWidget {
-  final BaseDatabase db;
+  final DB db;
   final SettingsController settingsController;
 
   const MindApp({

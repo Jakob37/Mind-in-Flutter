@@ -22,7 +22,7 @@ class AbstractViewData {
 }
 
 class EntriesViewData extends AbstractViewData {
-  EntriesViewData(BaseDatabase db)
+  EntriesViewData(DB db)
       : super(
           const Icon(Icons.home),
           ScratchView(
@@ -39,7 +39,7 @@ class EntriesViewData extends AbstractViewData {
 }
 
 class StoresViewData extends AbstractViewData {
-  StoresViewData(BaseDatabase db)
+  StoresViewData(DB db)
       : super(
           const Icon(Icons.folder),
           StoresView(
@@ -68,11 +68,11 @@ class GoalsViewData extends AbstractViewData {
 }
 
 class JournalViewData extends AbstractViewData {
-  JournalViewData()
+  JournalViewData(DB db)
       : super(
             const Icon(Icons.edit),
             JournalView(
-                loadEntries: () => Future.value([]),
+                loadEntries: () => db.getEntriesInStore(scratchStoreId),
                 addEntry: (Entry entry) => {},
                 removeEntry: (String entryId) => {}));
 }
@@ -85,11 +85,11 @@ class SettingsViewData extends AbstractViewData {
         );
 }
 
-Widget appMainView(BaseDatabase db, SettingsController settingsController) {
+Widget appMainView(DB db, SettingsController settingsController) {
   AbstractViewData entriesView = EntriesViewData(db);
   AbstractViewData storesView = StoresViewData(db);
   // AbstractViewData goalsView = GoalsViewData();
-  AbstractViewData logView = JournalViewData();
+  AbstractViewData logView = JournalViewData(db);
   AbstractViewData settingsView = SettingsViewData(settingsController);
 
   List<AbstractViewData> views = [

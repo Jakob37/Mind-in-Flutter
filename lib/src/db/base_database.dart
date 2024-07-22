@@ -1,6 +1,6 @@
 import 'package:mind_flutter/src/db/entities.dart';
 
-abstract class BaseDatabase {
+abstract class DB {
   Future<void> ensureSetup();
 
   Future<void> addStore(Store store);
