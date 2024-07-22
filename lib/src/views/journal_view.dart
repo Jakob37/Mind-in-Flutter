@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:mind_flutter/src/db/entities.dart';
+import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:shared_flutter_code/shared_flutter_code.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -70,9 +71,14 @@ Widget entriesList(List<Entry> entries) {
   return Column(children: [
     Expanded(
         child: ListView(
-            children: entries.map((entry) => Text(entry.title)).toList()))
+            children: entries.map((entry) => getEntryCard(entry)).toList()))
   ]);
 }
+
+Widget getEntryCard(Entry entry) {
+  return entryCard(entry, () {}, () {}, () {});
+}
+
 
 // class EntriesList extends StatefulWidget {
 //   const EntriesList({super.key});
