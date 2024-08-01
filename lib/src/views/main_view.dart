@@ -72,9 +72,12 @@ class JournalViewData extends AbstractViewData {
       : super(
             const Icon(Icons.edit),
             JournalView(
-                loadEntries: () => db.getEntriesInStore(scratchStoreId),
-                addEntry: (Entry entry) => {},
-                removeEntry: (String entryId) => {}));
+                loadEntries: () => db.getEntriesInStore(journalStoreId),
+                addEntry: (Entry entry) =>
+                    {logger.e("addEntry not implemented for this view yet")},
+                removeEntry: (String entryId) => {
+                      logger.e("removeEntry not implemented for this view yet")
+                    }));
 }
 
 class SettingsViewData extends AbstractViewData {
@@ -89,13 +92,13 @@ Widget appMainView(DB db, SettingsController settingsController) {
   AbstractViewData entriesView = EntriesViewData(db);
   AbstractViewData storesView = StoresViewData(db);
   // AbstractViewData goalsView = GoalsViewData();
-  AbstractViewData logView = JournalViewData(db);
+  AbstractViewData journalView = JournalViewData(db);
   AbstractViewData settingsView = SettingsViewData(settingsController);
 
   List<AbstractViewData> views = [
     entriesView,
     // goalsView,
-    logView,
+    journalView,
     storesView,
     settingsView
   ];

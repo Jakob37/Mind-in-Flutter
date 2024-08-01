@@ -1,17 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mind_flutter/src/config_default.dart';
 import 'package:mind_flutter/src/db/base_database.dart';
 import 'package:mind_flutter/src/db/_database.dart';
 import 'package:mind_flutter/src/db/entities.dart';
 
 const storesKey = 'stores';
 // const entriesKey = 'entries';
-const scratchStoreId = 'scratch';
+// const scratchStoreId = 'scratch';
 
 class FirebaseDatabase implements DB {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   Future<void> ensureSetup() async {
+    ensureStoreExists(scratchStoreId);
+    ensureStoreExists(journalStoreId);
+  }
+
+  Future<void> ensureStoreExists(String storeId) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> storeDoc =
           await firestore.collection(storesKey).doc(scratchStoreId).get();
