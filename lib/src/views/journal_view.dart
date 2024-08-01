@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:mind_flutter/src/db/dbutil.dart';
 import 'package:mind_flutter/src/db/entities.dart';
 import 'package:mind_flutter/src/ui/entry_card.dart';
 import 'package:shared_flutter_code/shared_flutter_code.dart';
@@ -56,8 +57,29 @@ class JournalViewState extends State<JournalView> {
       body: SafeArea(child: entriesList(entries)),
       // body: SafeArea(child: Column(children: [Expanded(child: getList())])),
       bottomNavigationBar:
-          sharedBottomButton("Add journal", () => logger.w("Pressed")),
+          sharedBottomButton("Add entry", () => _showModal(context)),
     );
+  }
+
+  void _showModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => InputModal(
+        onSubmitted: (value) {
+          setState(() {
+            _addNewItem(value);
+          });
+        },
+      ),
+    );
+  }
+
+  void _addNewItem(String title) async {
+    Entry entry = createEmptyEntry(title);
+    entries.add(entry);
+    widget.addEntry(entry);
+    // widget.assignEntries(entries);
+    setState(() {});
   }
 
   void _onReorder(int first, int second) {}

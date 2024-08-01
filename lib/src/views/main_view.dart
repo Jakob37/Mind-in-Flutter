@@ -74,7 +74,7 @@ class JournalViewData extends AbstractViewData {
             JournalView(
                 loadEntries: () => db.getEntriesInStore(journalStoreId),
                 addEntry: (Entry entry) =>
-                    {logger.e("addEntry not implemented for this view yet")},
+                    {db.addEntryToStore(journalStoreId, entry)},
                 removeEntry: (String entryId) => {
                       logger.e("removeEntry not implemented for this view yet")
                     }));

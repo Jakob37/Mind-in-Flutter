@@ -13,25 +13,23 @@ class FirebaseDatabase implements DB {
 
   @override
   Future<void> ensureSetup() async {
-    ensureStoreExists(scratchStoreId);
-    ensureStoreExists(journalStoreId);
+    ensureStoreExists(scratchStoreId, "Scratch");
+    ensureStoreExists(journalStoreId, "Journal");
   }
 
-  Future<void> ensureStoreExists(String storeId) async {
+  Future<void> ensureStoreExists(String storeId, String title) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> storeDoc =
-          await firestore.collection(storesKey).doc(scratchStoreId).get();
+          await firestore.collection(storesKey).doc(storeId).get();
 
       if (!storeDoc.exists) {
-        // Store scratchStore = createStore(scratchStoreId);
-        String storeId = scratchStoreId;
-        Store scratchStore =
-            Store(storeId, DateTime.now(), DateTime.now(), "Scratch", {});
+        Store ensuredStore =
+            Store(storeId, DateTime.now(), DateTime.now(), title, {});
 
-        await addStore(scratchStore);
+        await addStore(ensuredStore);
       }
     } catch (e) {
-      throw Exception("Error checking/adding scratch store: $e");
+      throw Exception("Error checking/adding store with title $title: $e");
     }
   }
 
@@ -119,6 +117,7 @@ class FirebaseDatabase implements DB {
 
   @override
   Future<void> addEntryToStore(String storeId, Entry entry) async {
+    logger.i("addEntryToStore $storeId");
     Store store = await getStore(storeId);
     store.addEntry(entry);
     // firestore.collection(storesKey).doc(storeId).set(entry.toJson());
