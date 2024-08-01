@@ -44,15 +44,6 @@ class JournalViewState extends State<JournalView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget getList() {
-      return ReorderableListView(
-        onReorder: _onReorder,
-        children: [
-          ...entries.map((entry) => _buildEntryCard(context, entry)),
-        ],
-      );
-    }
-
     return Scaffold(
       body: SafeArea(child: entriesList(entries)),
       // body: SafeArea(child: Column(children: [Expanded(child: getList())])),
@@ -80,12 +71,6 @@ class JournalViewState extends State<JournalView> {
     widget.addEntry(entry);
     // widget.assignEntries(entries);
     setState(() {});
-  }
-
-  void _onReorder(int first, int second) {}
-
-  Widget _buildEntryCard(BuildContext context, entry) {
-    return const Text("Empty widget");
   }
 }
 
