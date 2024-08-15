@@ -72,12 +72,11 @@ class JournalViewData extends AbstractViewData {
       : super(
             const Icon(Icons.edit),
             JournalView(
-                loadEntries: () => db.getEntriesInStore(journalStoreId),
-                addEntry: (Entry entry) =>
+                loadEntriesFromDb: () => db.getEntriesInStore(journalStoreId),
+                addEntryToDb: (Entry entry) =>
                     {db.addEntryToStore(journalStoreId, entry)},
-                removeEntry: (String entryId) => {
-                      logger.e("removeEntry not implemented for this view yet")
-                    }));
+                removeEntryFromDb: (String entryId) =>
+                    {db.removeEntryFromStore(journalStoreId, entryId)}));
 }
 
 class SettingsViewData extends AbstractViewData {

@@ -125,6 +125,14 @@ class FirebaseDatabase implements DB {
   }
 
   @override
+  Future<void> removeEntryFromStore(String storeId, String entryId) async {
+    logger.i("removing from store $storeId $entryId");
+    Store store = await getStore(storeId);
+    store.removeEntry(entryId);
+    saveStore(store);
+  }
+
+  @override
   Future<void> updateEntryTitle(
       String storeId, String entryId, String title) async {
     Store store = await getStore(storeId);

@@ -13,6 +13,7 @@ abstract class DB {
   Future<Entry> getEntryInStore(String storeId, String entryId);
   Future<void> setStoreEntries(String storeId, List<Entry> entries);
   Future<void> addEntryToStore(String storeId, Entry entry);
+  Future<void> removeEntryFromStore(String storeId, String entryId);
   Future<void> updateEntryInStore(
       String storeId, String entryId, String title, String content);
   Future<void> updateEntryTitle(
