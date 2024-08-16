@@ -36,6 +36,6 @@ Store createStore(String title) {
 
 Entry createEmptyEntry(String title) {
   String id = getEntryId();
-  Entry entry = Entry(id, DateTime.now(), DateTime.now(), title, "");
+  Entry entry = Entry(id, DateTime.now(), DateTime.now(), title, "", []);
   return entry;
 }

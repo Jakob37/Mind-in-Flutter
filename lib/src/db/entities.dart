@@ -9,7 +9,14 @@ import 'dart:convert';
 //   DbEntity(this.id, this.created)
 // }
 
-class Store {
+typedef JSON = Map<String, dynamic>;
+
+abstract class Entity {
+  void toJson();
+  Entity fromJson(JSON json);
+}
+
+class Store implements Entity {
   final String id;
   final DateTime created;
   DateTime lastChanged;
@@ -26,7 +33,8 @@ class Store {
     return entries[entryId] as Entry;
   }
 
-  Map<String, dynamic> toJson() {
+  @override
+  JSON toJson() {
     return {
       "id": id.toString(),
       "created": created.toIso8601String(),
@@ -34,6 +42,11 @@ class Store {
       "title": title,
       "entries": entries.map((key, entry) => MapEntry(key, entry.toJson()))
     };
+  }
+
+  @override
+  Store fromJson(JSON json) {
+    return Store.fromJson(json);
   }
 
   factory Store.fromJson(Map<String, dynamic> json) {
@@ -70,7 +83,7 @@ class Store {
   }
 }
 
-class Entry {
+class Entry implements Entity {
   final String id;
   final DateTime created;
   DateTime lastChanged;
@@ -79,25 +92,35 @@ class Entry {
 
   Map<String, String>? customAttributes;
 
+  List<Entry> childEntries;
+
   Entry(this.id, this.created, this.lastChanged, this.title, this.content,
+      this.childEntries,
       [this.customAttributes]);
 
   String toJsonString() {
     return json.encode(toJson());
   }
 
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> obj = {
+  @override
+  JSON toJson() {
+    JSON obj = {
       'id': id.toString(),
       'created': created.toIso8601String(),
       'lastChanged': lastChanged.toIso8601String(),
       'title': title,
       'content': content,
+      'childEntries': childEntries,
     };
     if (customAttributes != null) {
       obj['customAttributes'] = customAttributes;
     }
     return obj;
+  }
+
+  @override
+  Entry fromJson(JSON json) {
+    return Entry.fromJson(json);
   }
 
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
@@ -106,9 +129,19 @@ class Entry {
       DateTime.parse(json['lastChanged']),
       json['title'] as String,
       json['content'] as String,
+      parseOptionalList(Entry.fromJson, json['childEntries']),
       json['customAttributes'] != null
           ? Map<String, String>.from(json['customAttributes'])
           : null);
+}
+
+List<Entity> parseOptionalList<Entity>(
+    Entity Function(JSON json) createFn, List<JSON>? origJson) {
+  if (origJson == null) {
+    return [];
+  }
+
+  return origJson.map((childJson) => createFn(childJson)).toList();
 }
 
 // class JournalLog {
